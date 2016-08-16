@@ -120,7 +120,7 @@ class BoardScene: SKScene {
     func resolveRandomReward() {
         // Increment Win Percentage by 0.33/0.67/1 based on number of colors selected
         
-        let rand = Int(arc4random_uniform(300)) + 1
+        let rand = Int(arc4random_uniform(30)) + 1
         
         if rand <= GameData.rewardChance {
             shouldAddReward = true
