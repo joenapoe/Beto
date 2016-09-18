@@ -48,6 +48,8 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        //this is the hud for the gameScene
         gameHUDView = UIImageView(frame: CGRect(x: 0, y: 0, width: 320 * Constant.ScaleFactor, height: 38 * Constant.ScaleFactor))
         gameHUDView.image = UIImage(named: "gameSceneHUD")
         self.view.addSubview(gameHUDView)
@@ -157,14 +159,46 @@ class GameViewController: UIViewController {
         
         var winningColors: [Color] = []
         var didWin = false
+
         
         for node in gameScene.getDice() {
             let winningColor = gameScene.getWinningColor(node)
             let didPayout = boardScene.payout(winningColor)
             
+            
+            print("The winning color is \(winningColor)... did i win \(didPayout)")
+
             if !didWin {
                 didWin = didPayout
             }
+            
+            if didPayout {
+                let winMsg = SCNText(string: "+\(boardScene.calculateWinnings(winningColor))", extrusionDepth: 0.02)
+                winMsg.chamferRadius = 0.001
+                winMsg.font = UIFont(name: "Futura-CondensedMedium", size: (0.2/1.29375)*Constant.ScaleFactor)
+                
+                let whiteSide = SCNMaterial()
+                whiteSide.diffuse.contents = UIColor.whiteColor()
+                let yellowSide = SCNMaterial()
+                yellowSide.diffuse.contents = UIColor.yellowColor()
+                let blackSide = SCNMaterial()
+                blackSide.diffuse.contents = UIColor.blackColor()
+                
+                winMsg.materials = [whiteSide,blackSide,blackSide,blackSide,blackSide]
+                winMsg.flatness = 0.000000000001
+                winMsg.alignmentMode = kCAAlignmentCenter
+                
+                let winMsgNode = SCNNode(geometry: winMsg)
+                winMsgNode.position = SCNVector3Make(node.presentationNode.position.x-0.15 , node.presentationNode.position.y+0.25 , node.presentationNode.position.z+0.1 )
+                winMsgNode.eulerAngles = SCNVector3Make(Float(-M_PI/2), 0,0)
+                
+                winMsgNode.physicsBody = SCNPhysicsBody.dynamicBody()
+                winMsgNode.physicsBody?.affectedByGravity = false
+                winMsgNode.physicsBody?.applyForce(SCNVector3(0,0.03,0), impulse: true)
+                
+                gameScene.rootNode.addChildNode(winMsgNode)
+            }
+            
             
             if didPayout && !winningColors.contains(winningColor) {
                 switch winningColor {

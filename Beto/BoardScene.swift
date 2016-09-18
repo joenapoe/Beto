@@ -493,6 +493,7 @@ class BoardScene: SKScene {
     }
     
     /***** Gameplay Functions *****/
+
     func payout(winningColor: Color) -> Bool {
         var winningSquare: Square!
         var didWin = false
@@ -511,7 +512,9 @@ class BoardScene: SKScene {
         }
         
         // Add winnings
+        
         if winningSquare.wager > 0 {
+            
             var winnings = winningSquare.wager
             
             if activePowerUp == "" {
@@ -534,7 +537,58 @@ class BoardScene: SKScene {
         }
         
         return didWin
+        
     }
+    
+
+    
+    
+    
+    func calculateWinnings (winningColor: Color) -> Int {
+
+        var winningSquare: Square!
+        
+        // Keep track of winning squares
+        for square in squares {
+            if square.color == winningColor {
+                winningSquare = square
+                
+                if !winningSquares.contains(winningSquare) {
+                    winningSquares.append(winningSquare)
+                }
+                
+                break
+            }
+        }
+        
+        // Add winnings
+        
+        var winnings = 0
+        
+        if winningSquare.wager > 0 {
+            
+            winnings = winningSquare.wager
+            
+            if activePowerUp == "" {
+                // Skip if no payout powerup is active
+            } else if activePowerUp == PowerUpKey.doublePayout.rawValue {
+                winnings *= 2
+            } else if activePowerUp == PowerUpKey.triplePayout.rawValue {
+                winnings *= 3
+            }
+            
+        }
+        
+        return winnings
+        
+    }
+    
+    
+    
+    
+    
+    
+    
     
     func resolveWagers(didWin: Bool) {
         var highestWager = 0
