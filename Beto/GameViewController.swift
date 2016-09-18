@@ -160,7 +160,6 @@ class GameViewController: UIViewController {
         var winningColors: [Color] = []
         var didWin = false
 
-        var winMsgCount : Float = 0
         
         for node in gameScene.getDice() {
             let winningColor = gameScene.getWinningColor(node)
@@ -174,57 +173,30 @@ class GameViewController: UIViewController {
             }
             
             if didPayout {
+                let winMsg = SCNText(string: "+\(boardScene.calculateWinnings(winningColor))", extrusionDepth: 0.02)
+                winMsg.chamferRadius = 0.001
+                winMsg.font = UIFont(name: "Futura-CondensedMedium", size: (0.2/1.29375)*Constant.ScaleFactor)
                 
-                let winMsg = SCNText(string: "Winner on \(winningColor)!", extrusionDepth: 0.01)
-                winMsg.chamferRadius = 5
-
-                winMsg.font = UIFont (name: "Arial", size: 0.2)
-                winMsg.firstMaterial!.diffuse.contents = UIColor.whiteColor()
-                winMsg.firstMaterial!.specular.contents = UIColor.whiteColor()
+                let whiteSide = SCNMaterial()
+                whiteSide.diffuse.contents = UIColor.whiteColor()
+                let yellowSide = SCNMaterial()
+                yellowSide.diffuse.contents = UIColor.yellowColor()
+                let blackSide = SCNMaterial()
+                blackSide.diffuse.contents = UIColor.blackColor()
+                
+                winMsg.materials = [whiteSide,blackSide,blackSide,blackSide,blackSide]
+                winMsg.flatness = 0.000000000001
                 winMsg.alignmentMode = kCAAlignmentCenter
                 
                 let winMsgNode = SCNNode(geometry: winMsg)
-                winMsgNode.position = SCNVector3Make(-1, 0, winMsgCount)
+                winMsgNode.position = SCNVector3Make(node.presentationNode.position.x-0.15 , node.presentationNode.position.y+0.25 , node.presentationNode.position.z+0.1 )
                 winMsgNode.eulerAngles = SCNVector3Make(Float(-M_PI/2), 0,0)
+                
+                winMsgNode.physicsBody = SCNPhysicsBody.dynamicBody()
+                winMsgNode.physicsBody?.affectedByGravity = false
+                winMsgNode.physicsBody?.applyForce(SCNVector3(0,0.03,0), impulse: true)
+                
                 gameScene.rootNode.addChildNode(winMsgNode)
-                
-                winMsgCount += 0.25
-                
-//                let winDisplayNode = SKLabelNode(text: "YOU WON on \(winningColor)!!!")
-//                winDisplayNode.fontName = Constant.FontName
-//                winDisplayNode.fontSize = 16
-//                winDisplayNode.position = CGPoint(x: 0, y: 170 + 10)
-//                
-//                self.view.addSubview(<#T##view: UIView##UIView#>)
-//                layer.addChild(winDisplayNode)
-//                
-//                let fade = SKAction.fadeOutWithDuration(3.0)
-//                let actions = SKAction.sequence([fade, SKAction.removeFromParent()])
-//                
-//                winDisplayNode.runAction(actions)
-//                
-////                runAction(Audio.lostSound)
-            
-                
-//                var winnerLabel: UILabel!
-//                winnerLabel = UILabel()
-////                winnerLabel.frame = CGRect(x: 100, y: 100, width: 80  * Constant.ScaleFactor, height: 18  * Constant.ScaleFactor)
-//                winnerLabel.text = "YOU WON on \(winningColor)!!!"
-//                winnerLabel.font = UIFont(name: "Futura-CondensedMedium", size: 14 * Constant.ScaleFactor)
-//                //winnerLabel.position = (CGPoint(x:0, y:0))
-//                winnerLabel.textColor = UIColor.whiteColor()
-////                winnerLabel.textAlignment = .Center
-//                winnerLabel.contentMode = .Center
-//                self.view.addSubview(winnerLabel)
-//                
-//                // Configure PowerUps
-//                if boardScene.activePowerUp != "" {
-//                    let activePowerUpView = UIImageView(frame: CGRect(x: 10, y: gameHUDView.frame.height + 5, width: 48 * Constant.ScaleFactor, height: 48 * Constant.ScaleFactor))
-//                    activePowerUpView.image = UIImage(named: boardScene.activePowerUp)
-//                    activePowerUpView.contentMode = .TopLeft
-//                    self.view.addSubview(activePowerUpView)
-//                }
-            
             }
             
             

@@ -151,8 +151,6 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
         }
         
         var colors = [Color.Yellow, Color.Cyan, Color.Purple, Color.Blue, Color.Red, Color.Green]
-        //print("WINNINGINDEX = \(colors[winningIndex])")
-
         return colors[winningIndex]
     }
     
