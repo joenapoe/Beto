@@ -511,7 +511,39 @@ class BoardScene: SKScene {
         }
         
         // Add winnings
+        
+        //var counter: CGFloat = 0.0
+
+        
         if winningSquare.wager > 0 {
+            
+            
+            
+//            print("Payout = \(winningSquare.color) for \(winningSquare.wager)")
+//            //TODO: PUT IN WINNING ANIMATION HERE!
+//            let winDisplayNode = SKLabelNode(text: "YOU WON!!! Payout = \(winningSquare.color) for \(winningSquare.wager)")
+//            winDisplayNode.fontName = Constant.FontName
+//            winDisplayNode.fontSize = 16
+//            winDisplayNode.position = CGPoint(x: 0, y: board.position.y + 170 + 10 * counter)
+//            
+//            layer.addChild(winDisplayNode)
+//            
+//            let fade = SKAction.fadeOutWithDuration(3.0)
+//            let actions = SKAction.sequence([fade, SKAction.removeFromParent()])
+//            
+//            winDisplayNode.runAction(actions)
+//            
+//            runAction(Audio.lostSound)
+//            
+//            counter++
+            
+            
+            
+            
+
+            
+            
+            
             var winnings = winningSquare.wager
             
             if activePowerUp == "" {

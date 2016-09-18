@@ -92,7 +92,11 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
     }
     
     func nearlyAtRest(node: SCNNode) -> Bool {
+        //print("TEST")
+
         if node.physicsBody!.isResting {
+            //print("CUBE IS RESTING!")
+
             return true
         }
         
@@ -147,7 +151,8 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
         }
         
         var colors = [Color.Yellow, Color.Cyan, Color.Purple, Color.Blue, Color.Red, Color.Green]
-        
+        //print("WINNINGINDEX = \(colors[winningIndex])")
+
         return colors[winningIndex]
     }
     
@@ -170,6 +175,7 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
             
             for node in getDice() {
                 if nearlyAtRest(node) && !node.paused {
+                    print("CUBE IS RESTING = \(node.name)")
                     node.paused = true
                 }
                 

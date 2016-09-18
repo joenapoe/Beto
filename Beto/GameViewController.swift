@@ -48,6 +48,8 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        //this is the hud for the gameScene
         gameHUDView = UIImageView(frame: CGRect(x: 0, y: 0, width: 320 * Constant.ScaleFactor, height: 38 * Constant.ScaleFactor))
         gameHUDView.image = UIImage(named: "gameSceneHUD")
         self.view.addSubview(gameHUDView)
@@ -157,14 +159,74 @@ class GameViewController: UIViewController {
         
         var winningColors: [Color] = []
         var didWin = false
+
+        var winMsgCount : Float = 0
         
         for node in gameScene.getDice() {
             let winningColor = gameScene.getWinningColor(node)
             let didPayout = boardScene.payout(winningColor)
             
+            
+            print("The winning color is \(winningColor)... did i win \(didPayout)")
+
             if !didWin {
                 didWin = didPayout
             }
+            
+            if didPayout {
+                
+                let winMsg = SCNText(string: "Winner on \(winningColor)!", extrusionDepth: 0.01)
+                winMsg.chamferRadius = 5
+
+                winMsg.font = UIFont (name: "Arial", size: 0.2)
+                winMsg.firstMaterial!.diffuse.contents = UIColor.whiteColor()
+                winMsg.firstMaterial!.specular.contents = UIColor.whiteColor()
+                winMsg.alignmentMode = kCAAlignmentCenter
+                
+                let winMsgNode = SCNNode(geometry: winMsg)
+                winMsgNode.position = SCNVector3Make(-1, 0, winMsgCount)
+                winMsgNode.eulerAngles = SCNVector3Make(Float(-M_PI/2), 0,0)
+                gameScene.rootNode.addChildNode(winMsgNode)
+                
+                winMsgCount += 0.25
+                
+//                let winDisplayNode = SKLabelNode(text: "YOU WON on \(winningColor)!!!")
+//                winDisplayNode.fontName = Constant.FontName
+//                winDisplayNode.fontSize = 16
+//                winDisplayNode.position = CGPoint(x: 0, y: 170 + 10)
+//                
+//                self.view.addSubview(<#T##view: UIView##UIView#>)
+//                layer.addChild(winDisplayNode)
+//                
+//                let fade = SKAction.fadeOutWithDuration(3.0)
+//                let actions = SKAction.sequence([fade, SKAction.removeFromParent()])
+//                
+//                winDisplayNode.runAction(actions)
+//                
+////                runAction(Audio.lostSound)
+            
+                
+//                var winnerLabel: UILabel!
+//                winnerLabel = UILabel()
+////                winnerLabel.frame = CGRect(x: 100, y: 100, width: 80  * Constant.ScaleFactor, height: 18  * Constant.ScaleFactor)
+//                winnerLabel.text = "YOU WON on \(winningColor)!!!"
+//                winnerLabel.font = UIFont(name: "Futura-CondensedMedium", size: 14 * Constant.ScaleFactor)
+//                //winnerLabel.position = (CGPoint(x:0, y:0))
+//                winnerLabel.textColor = UIColor.whiteColor()
+////                winnerLabel.textAlignment = .Center
+//                winnerLabel.contentMode = .Center
+//                self.view.addSubview(winnerLabel)
+//                
+//                // Configure PowerUps
+//                if boardScene.activePowerUp != "" {
+//                    let activePowerUpView = UIImageView(frame: CGRect(x: 10, y: gameHUDView.frame.height + 5, width: 48 * Constant.ScaleFactor, height: 48 * Constant.ScaleFactor))
+//                    activePowerUpView.image = UIImage(named: boardScene.activePowerUp)
+//                    activePowerUpView.contentMode = .TopLeft
+//                    self.view.addSubview(activePowerUpView)
+//                }
+            
+            }
+            
             
             if didPayout && !winningColors.contains(winningColor) {
                 switch winningColor {
