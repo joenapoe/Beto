@@ -39,7 +39,8 @@ class BoardScene: SKScene {
     private var rewardTriggered = false
     private var rewardBoostActivated = false
     private var diceType: DiceType = .Default
-    private(set) var activePowerUp: String = ""
+    
+    private(set) var activePowerUp = ""
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder) is not used in this app")
@@ -492,103 +493,47 @@ class BoardScene: SKScene {
         addChild(openRewards.createLayer())        
     }
     
-    /***** Gameplay Functions *****/
-
-    func payout(winningColor: Color) -> Bool {
-        var winningSquare: Square!
-        var didWin = false
-        
-        // Keep track of winning squares
-        for square in squares {
-            if square.color == winningColor {
-                winningSquare = square
-                
-                if !winningSquares.contains(winningSquare) {
-                    winningSquares.append(winningSquare)
-                }
-                
-                break
-            }
+    /***** Gameplay Functions *****/    
+    func resolvePayout(square: Square) {
+        if !winningSquares.contains(square) {
+            winningSquares.append(square)
         }
         
         // Add winnings
-        
-        if winningSquare.wager > 0 {
-            
-            var winnings = winningSquare.wager
-            
-            if activePowerUp == "" {
-                // Skip if no payout powerup is active
-            } else if activePowerUp == PowerUpKey.doublePayout.rawValue {
-                winnings *= 2
-            } else if activePowerUp == PowerUpKey.triplePayout.rawValue {
-                winnings *= 3
-            }
+        if square.wager > 0 {
+            let winnings = calculateWinnings(square)
             
             GameData.addCoins(winnings)
         
             runAction(Audio.winSound)
-        
-            didWin = true
             
             // Update labels
             updateCoinsLabel(GameData.coins)
             updateHighscoreLabel(GameData.highscore)
         }
-        
-        return didWin
-        
     }
     
-
-    
-    
-    
-    func calculateWinnings (winningColor: Color) -> Int {
-
-        var winningSquare: Square!
+    func calculateWinnings(square: Square) -> Int {
+        var winnings = square.wager
         
-        // Keep track of winning squares
-        for square in squares {
-            if square.color == winningColor {
-                winningSquare = square
-                
-                if !winningSquares.contains(winningSquare) {
-                    winningSquares.append(winningSquare)
-                }
-                
-                break
-            }
-        }
-        
-        // Add winnings
-        
-        var winnings = 0
-        
-        if winningSquare.wager > 0 {
-            
-            winnings = winningSquare.wager
-            
-            if activePowerUp == "" {
-                // Skip if no payout powerup is active
-            } else if activePowerUp == PowerUpKey.doublePayout.rawValue {
-                winnings *= 2
-            } else if activePowerUp == PowerUpKey.triplePayout.rawValue {
-                winnings *= 3
-            }
-            
+        if activePowerUp == "" {
+            // Skip if no payout powerup is active
+        } else if activePowerUp == PowerUpKey.doublePayout.rawValue {
+            winnings *= 2
+        } else if activePowerUp == PowerUpKey.triplePayout.rawValue {
+            winnings *= 3
         }
         
         return winnings
-        
     }
     
-    
-    
-    
-    
-    
-    
+    func didPayout(square: Square) -> Bool {
+        if square.wager > 0 {
+            return true
+        } else {
+            return false
+        }
+    }
     
     func resolveWagers(didWin: Bool) {
         var highestWager = 0
