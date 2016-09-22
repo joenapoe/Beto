@@ -49,7 +49,7 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         
         
-        //this is the hud for the gameScene
+        // Configure GameSceneHUD
         gameHUDView = UIImageView(frame: CGRect(x: 0, y: 0, width: 320 * Constant.ScaleFactor, height: 38 * Constant.ScaleFactor))
         gameHUDView.image = UIImage(named: "gameSceneHUD")
         self.view.addSubview(gameHUDView)
@@ -159,28 +159,25 @@ class GameViewController: UIViewController {
         
         var winningColors: [Color] = []
         var didWin = false
-
         
         for node in gameScene.getDice() {
             let winningColor = gameScene.getWinningColor(node)
-            let didPayout = boardScene.payout(winningColor)
+            let square = boardScene.squareWithColor(winningColor)
             
+            boardScene.resolvePayout(square)
             
-            print("The winning color is \(winningColor)... did i win \(didPayout)")
-
+            // Keeps track if you match at least one color this roll
             if !didWin {
-                didWin = didPayout
+                didWin = boardScene.didPayout(square)
             }
             
-            if didPayout {
-                let winMsg = SCNText(string: "+\(boardScene.calculateWinnings(winningColor))", extrusionDepth: 0.02)
+            if boardScene.didPayout(square) {
+                let winMsg = SCNText(string: "+\(boardScene.calculateWinnings(square))", extrusionDepth: 0.02)
                 winMsg.chamferRadius = 0.001
-                winMsg.font = UIFont(name: "Futura-CondensedMedium", size: (0.2/1.29375)*Constant.ScaleFactor)
+                winMsg.font = UIFont(name: "Futura-CondensedExtraBold", size: (0.2/1.29375)*Constant.ScaleFactor)
                 
                 let whiteSide = SCNMaterial()
                 whiteSide.diffuse.contents = UIColor.whiteColor()
-                let yellowSide = SCNMaterial()
-                yellowSide.diffuse.contents = UIColor.yellowColor()
                 let blackSide = SCNMaterial()
                 blackSide.diffuse.contents = UIColor.blackColor()
                 
@@ -199,8 +196,7 @@ class GameViewController: UIViewController {
                 gameScene.rootNode.addChildNode(winMsgNode)
             }
             
-            
-            if didPayout && !winningColors.contains(winningColor) {
+            if didWin && !winningColors.contains(winningColor) {
                 switch winningColor {
                 case .Blue:
                     GameData.incrementAchievement(.BlueWin)
@@ -219,7 +215,7 @@ class GameViewController: UIViewController {
                 winningColors.append(winningColor)
             }
             
-            gameScene.animateRollResult(node, didWin: didPayout)
+            gameScene.animateRollResult(node, didWin: boardScene.didPayout(square))
             delay(1.0) {}
         }
         
