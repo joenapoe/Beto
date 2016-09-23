@@ -48,6 +48,8 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        // Configure GameSceneHUD
         gameHUDView = UIImageView(frame: CGRect(x: 0, y: 0, width: 320 * Constant.ScaleFactor, height: 38 * Constant.ScaleFactor))
         gameHUDView.image = UIImage(named: "gameSceneHUD")
         self.view.addSubview(gameHUDView)
@@ -160,13 +162,41 @@ class GameViewController: UIViewController {
         
         for node in gameScene.getDice() {
             let winningColor = gameScene.getWinningColor(node)
-            let didPayout = boardScene.payout(winningColor)
+            let square = boardScene.squareWithColor(winningColor)
             
+            boardScene.resolvePayout(square)
+            
+            // Keeps track if you match at least one color this roll
             if !didWin {
-                didWin = didPayout
+                didWin = boardScene.didPayout(square)
             }
             
-            if didPayout && !winningColors.contains(winningColor) {
+            if boardScene.didPayout(square) {
+                let winMsg = SCNText(string: "+\(boardScene.calculateWinnings(square))", extrusionDepth: 0.02)
+                winMsg.chamferRadius = 0.001
+                winMsg.font = UIFont(name: "Futura-CondensedExtraBold", size: (0.2/1.29375)*Constant.ScaleFactor)
+                
+                let whiteSide = SCNMaterial()
+                whiteSide.diffuse.contents = UIColor.whiteColor()
+                let blackSide = SCNMaterial()
+                blackSide.diffuse.contents = UIColor.blackColor()
+                
+                winMsg.materials = [whiteSide,blackSide,blackSide,blackSide,blackSide]
+                winMsg.flatness = 0.000000000001
+                winMsg.alignmentMode = kCAAlignmentCenter
+                
+                let winMsgNode = SCNNode(geometry: winMsg)
+                winMsgNode.position = SCNVector3Make(node.presentationNode.position.x-0.15 , node.presentationNode.position.y+0.25 , node.presentationNode.position.z+0.1 )
+                winMsgNode.eulerAngles = SCNVector3Make(Float(-M_PI/2), 0,0)
+                
+                winMsgNode.physicsBody = SCNPhysicsBody.dynamicBody()
+                winMsgNode.physicsBody?.affectedByGravity = false
+                winMsgNode.physicsBody?.applyForce(SCNVector3(0,0.03,0), impulse: true)
+                
+                gameScene.rootNode.addChildNode(winMsgNode)
+            }
+            
+            if didWin && !winningColors.contains(winningColor) {
                 switch winningColor {
                 case .Blue:
                     GameData.incrementAchievement(.BlueWin)
@@ -185,7 +215,7 @@ class GameViewController: UIViewController {
                 winningColors.append(winningColor)
             }
             
-            gameScene.animateRollResult(node, didWin: didPayout)
+            gameScene.animateRollResult(node, didWin: boardScene.didPayout(square))
             delay(1.0) {}
         }
         
