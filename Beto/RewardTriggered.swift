@@ -15,7 +15,7 @@ class RewardTriggered: DropdownNode {
         container.size = CGSize(width: 304, height: 225)
         container.position = CGPoint(x: 0, y: ScreenSize.Height)
 
-        let rewardsLabel = SKLabelNode(text: "\(rewardsDice.key.rawValue.uppercaseString) REWARDS DICE")
+        let rewardsLabel = SKLabelNode(text: "\(rewardsDice.key.rawValue.uppercased()) REWARDS DICE")
         rewardsLabel.fontName = Constant.FontNameExtraBold
         rewardsLabel.fontSize = 14
         rewardsLabel.position = CGPoint(x: 0, y: 40)
@@ -24,7 +24,7 @@ class RewardTriggered: DropdownNode {
         
         let detailsLabel = SKLabelNode(text: "Click dice to open or claim to save for later")
         detailsLabel.fontName = Constant.FontName
-        detailsLabel.fontColor = UIColor.darkGrayColor()
+        detailsLabel.fontColor = UIColor.darkGray
         detailsLabel.fontSize = 10
         detailsLabel.position = CGPoint(x: 0, y: 25)
         

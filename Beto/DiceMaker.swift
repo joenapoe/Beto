@@ -9,17 +9,17 @@
 import SceneKit
 
 enum DiceType {
-    case Default
-    case DoublePayout
-    case TriplePayout
-    case DoubleDice
+    case `default`
+    case doublePayout
+    case triplePayout
+    case doubleDice
 }
 
 class DiceMaker {
     typealias Dice = SCNNode
 
-    private var count = 3
-    private var size: CGFloat = 0.33
+    fileprivate var count = 3
+    fileprivate var size: CGFloat = 0.33
     
     let diceMaterials: [SCNMaterial]!
     
@@ -36,19 +36,19 @@ class DiceMaker {
         var greenImage = "defaultGreenFace"
         
         switch type {
-        case .Default:
+        case .default:
             break
-        case .DoubleDice:
+        case .doubleDice:
             count = 6
             size = 0.28
-        case .DoublePayout:
+        case .doublePayout:
             yellowImage = "doublePayYellowFace"
             cyanImage = "doublePayCyanFace"
             purpleImage = "doublePayPurpleFace"
             blueImage = "doublePayBlueFace"
             redImage = "doublePayRedFace"
             greenImage = "doublePayGreenFace"
-        case .TriplePayout:
+        case .triplePayout:
             yellowImage = "triplePayYellowFace"
             cyanImage = "triplePayCyanFace"
             purpleImage = "triplePayPurpleFace"
@@ -79,7 +79,7 @@ class DiceMaker {
     
     }
     
-    func addDiceSetTo(diceNode: SCNNode) {
+    func addDiceSetTo(_ diceNode: SCNNode) {
         for num in 1...count {
             // Initialize position
             let xoffset = CGFloat(num % 3)
@@ -99,7 +99,7 @@ class DiceMaker {
             dice.eulerAngles = SCNVector3Make(Float(M_PI/2 * Double(arc4random()%4)), Float(M_PI/2 * Double(arc4random()%4)),Float(M_PI/2 * Double(arc4random()%4)))
             dice.geometry!.materials = diceMaterials
             
-            dice.physicsBody = SCNPhysicsBody.dynamicBody()
+            dice.physicsBody = SCNPhysicsBody.dynamic()
             dice.physicsBody?.mass = CGFloat(10)
             dice.physicsBody?.angularDamping = CGFloat(0.5)   //default 0.1
             dice.physicsBody?.rollingFriction = CGFloat(1.0)  //default 0.0

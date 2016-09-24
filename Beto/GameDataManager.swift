@@ -10,56 +10,56 @@ import Foundation
 
 class GameDataManager {
     // Keys
-    private let starCoinsKey = "starCoins"
-    private let coinsKey = "coins"
-    private let highscoreKey = "highscore"
-    private let gamesPlayedKey = "gamesPlayed"
-    private let coinsUnlockedKey = "coinsUnlocked"
-    private let betDenominationKey = "betDenomination"
-    private let soundMutedKey = "soundMuted"
-    private let musicMutedKey = "musicMuted"
-    private let currentThemeNameKey = "currentThemeName"
-    private let autoLoadEnabledKey = "autoLoadEnabled"
-    private let unlockedThemesKey = "unlockedThemes"
-    private let achievementTrackerKey = "achievementTracker"
-    private let powerUpsKey = "powerUps"
-    private let rewardsDiceKey = "rewardsDice"
+    fileprivate let starCoinsKey = "starCoins"
+    fileprivate let coinsKey = "coins"
+    fileprivate let highscoreKey = "highscore"
+    fileprivate let gamesPlayedKey = "gamesPlayed"
+    fileprivate let coinsUnlockedKey = "coinsUnlocked"
+    fileprivate let betDenominationKey = "betDenomination"
+    fileprivate let soundMutedKey = "soundMuted"
+    fileprivate let musicMutedKey = "musicMuted"
+    fileprivate let currentThemeNameKey = "currentThemeName"
+    fileprivate let autoLoadEnabledKey = "autoLoadEnabled"
+    fileprivate let unlockedThemesKey = "unlockedThemes"
+    fileprivate let achievementTrackerKey = "achievementTracker"
+    fileprivate let powerUpsKey = "powerUps"
+    fileprivate let rewardsDiceKey = "rewardsDice"
     
     // Plist Variables
-    private(set) var starCoins: Int
-    private(set) var coins: Int
-    private(set) var highscore: Int
-    private(set) var gamesPlayed: Int
-    private(set) var coinsUnlocked: Int
-    private(set) var betDenomination: Int
-    private(set) var soundMuted: Bool
-    private(set) var musicMuted: Bool
-    private(set) var autoLoadEnabled: Bool
-    private(set) var currentThemeName: String
-    private(set) var unlockedThemes: [String]
-    private(set) var achievementTracker: [String:Int]
-    private(set) var powerUps: [String:Int]
-    private(set) var rewardsDice: [String:Int]
+    fileprivate(set) var starCoins: Int
+    fileprivate(set) var coins: Int
+    fileprivate(set) var highscore: Int
+    fileprivate(set) var gamesPlayed: Int
+    fileprivate(set) var coinsUnlocked: Int
+    fileprivate(set) var betDenomination: Int
+    fileprivate(set) var soundMuted: Bool
+    fileprivate(set) var musicMuted: Bool
+    fileprivate(set) var autoLoadEnabled: Bool
+    fileprivate(set) var currentThemeName: String
+    fileprivate(set) var unlockedThemes: [String]
+    fileprivate(set) var achievementTracker: [String:Int]
+    fileprivate(set) var powerUps: [String:Int]
+    fileprivate(set) var rewardsDice: [String:Int]
     
     // Non-plist variables
-    private(set) var theme: Theme
-    private(set) var rewardChance: Int
+    fileprivate(set) var theme: Theme
+    fileprivate(set) var rewardChance: Int
     
     var unlockedCoinHandler: (() -> ())?
     var unlockedLevelHandler: ((Achievement) -> ())?
         
     init() {
-        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0] as NSString
-        let path = documentsDirectory.stringByAppendingPathComponent("GameData.plist")
-        let fileManager = NSFileManager.defaultManager()
+        let path = documentsDirectory.appendingPathComponent("GameData.plist")
+        let fileManager = FileManager.default
         
         // check if file exists
-        if(!fileManager.fileExistsAtPath(path)) {
+        if(!fileManager.fileExists(atPath: path)) {
             // If it doesn't, copy it from the default file in the bundle
-            if let bundlePath = NSBundle.mainBundle().pathForResource("GameData", ofType: "plist") {
+            if let bundlePath = Bundle.main.path(forResource: "GameData", ofType: "plist") {
                 do {
-                    try fileManager.copyItemAtPath(bundlePath, toPath: path)
+                    try fileManager.copyItem(atPath: bundlePath, toPath: path)
                 } catch {
                     print("Error copying file")
                 }
@@ -70,65 +70,65 @@ class GameDataManager {
         
         let dict = NSDictionary(contentsOfFile: path)!
         
-        starCoins = dict.objectForKey(starCoinsKey) as! Int
-        coins = dict.objectForKey(coinsKey) as! Int
-        highscore = dict.objectForKey(highscoreKey) as! Int
-        gamesPlayed = dict.objectForKey(gamesPlayedKey) as! Int
-        coinsUnlocked = dict.objectForKey(coinsUnlockedKey) as! Int
-        betDenomination = dict.objectForKey(betDenominationKey) as! Int
-        soundMuted = dict.objectForKey(soundMutedKey) as! Bool
-        musicMuted = dict.objectForKey(musicMutedKey) as! Bool
-        autoLoadEnabled = dict.objectForKey(autoLoadEnabledKey) as! Bool
-        currentThemeName = dict.objectForKey(currentThemeNameKey) as! String
-        unlockedThemes = dict.objectForKey(unlockedThemesKey) as! [String]
-        achievementTracker = dict.objectForKey(achievementTrackerKey) as! [String:Int]
-        powerUps = dict.objectForKey(powerUpsKey) as! [String:Int]
-        rewardsDice = dict.objectForKey(rewardsDiceKey) as! [String:Int]
+        starCoins = dict.object(forKey: starCoinsKey) as! Int
+        coins = dict.object(forKey: coinsKey) as! Int
+        highscore = dict.object(forKey: highscoreKey) as! Int
+        gamesPlayed = dict.object(forKey: gamesPlayedKey) as! Int
+        coinsUnlocked = dict.object(forKey: coinsUnlockedKey) as! Int
+        betDenomination = dict.object(forKey: betDenominationKey) as! Int
+        soundMuted = dict.object(forKey: soundMutedKey) as! Bool
+        musicMuted = dict.object(forKey: musicMutedKey) as! Bool
+        autoLoadEnabled = dict.object(forKey: autoLoadEnabledKey) as! Bool
+        currentThemeName = dict.object(forKey: currentThemeNameKey) as! String
+        unlockedThemes = dict.object(forKey: unlockedThemesKey) as! [String]
+        achievementTracker = dict.object(forKey: achievementTrackerKey) as! [String:Int]
+        powerUps = dict.object(forKey: powerUpsKey) as! [String:Int]
+        rewardsDice = dict.object(forKey: rewardsDiceKey) as! [String:Int]
 
         theme = Theme(themeName: currentThemeName, unlocked: true)
         rewardChance = 0
     }
     
     func save() {
-        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0] as NSString
-        let path = documentsDirectory.stringByAppendingPathComponent("GameData.plist")
+        let path = documentsDirectory.appendingPathComponent("GameData.plist")
         let dict: NSMutableDictionary = ["XInitializerItem": "DoNotEverChangeMe"]
         
         // save values
-        dict.setObject(starCoins, forKey: starCoinsKey)
-        dict.setObject(coins, forKey: coinsKey)
-        dict.setObject(highscore, forKey: highscoreKey)
-        dict.setObject(gamesPlayed, forKey: gamesPlayedKey)
-        dict.setObject(coinsUnlocked, forKey: coinsUnlockedKey)
-        dict.setObject(betDenomination, forKey: betDenominationKey)
-        dict.setObject(soundMuted, forKey: soundMutedKey)
-        dict.setObject(musicMuted, forKey: musicMutedKey)
-        dict.setObject(autoLoadEnabled, forKey: autoLoadEnabledKey)
-        dict.setObject(currentThemeName, forKey: currentThemeNameKey)
-        dict.setObject(unlockedThemes, forKey: unlockedThemesKey)
-        dict.setObject(achievementTracker, forKey: achievementTrackerKey)
-        dict.setObject(powerUps, forKey: powerUpsKey)
-        dict.setObject(rewardsDice, forKey: rewardsDiceKey)
+        dict.setObject(starCoins, forKey: starCoinsKey as NSCopying)
+        dict.setObject(coins, forKey: coinsKey as NSCopying)
+        dict.setObject(highscore, forKey: highscoreKey as NSCopying)
+        dict.setObject(gamesPlayed, forKey: gamesPlayedKey as NSCopying)
+        dict.setObject(coinsUnlocked, forKey: coinsUnlockedKey as NSCopying)
+        dict.setObject(betDenomination, forKey: betDenominationKey as NSCopying)
+        dict.setObject(soundMuted, forKey: soundMutedKey as NSCopying)
+        dict.setObject(musicMuted, forKey: musicMutedKey as NSCopying)
+        dict.setObject(autoLoadEnabled, forKey: autoLoadEnabledKey as NSCopying)
+        dict.setObject(currentThemeName, forKey: currentThemeNameKey as NSCopying)
+        dict.setObject(unlockedThemes, forKey: unlockedThemesKey as NSCopying)
+        dict.setObject(achievementTracker, forKey: achievementTrackerKey as NSCopying)
+        dict.setObject(powerUps, forKey: powerUpsKey as NSCopying)
+        dict.setObject(rewardsDice, forKey: rewardsDiceKey as NSCopying)
         
         // write to GameData.plist
-        dict.writeToFile(path, atomically: true)
+        dict.write(toFile: path, atomically: true)
     }
     
-    func changeTheme(theme: Theme) {
+    func changeTheme(_ theme: Theme) {
         currentThemeName = theme.name
         self.theme = theme
     }
     
-    func addPurchasedTheme(themeName: String) {
+    func addPurchasedTheme(_ themeName: String) {
         unlockedThemes.append(themeName)
     }
     
-    func setMusic(musicMuted: Bool) {
+    func setMusic(_ musicMuted: Bool) {
         self.musicMuted = musicMuted
     }
     
-    func setSound(soundMuted: Bool) {
+    func setSound(_ soundMuted: Bool) {
         self.soundMuted = soundMuted
     }
     
@@ -136,11 +136,11 @@ class GameDataManager {
         autoLoadEnabled = !autoLoadEnabled
     }
     
-    func setDenomination(value: Int) {
+    func setDenomination(_ value: Int) {
         betDenomination = value
     }
     
-    func addStarCoins(amount: Int) {
+    func addStarCoins(_ amount: Int) {
         starCoins += amount
         
         if let value = achievementTracker[AchievementName.StarCoin.rawValue] {
@@ -150,11 +150,11 @@ class GameDataManager {
         Achievements.update(.StarCoin)
     }
     
-    func subtractStarCoins(amount: Int) {
+    func subtractStarCoins(_ amount: Int) {
         starCoins -= amount
     }
     
-    func addCoins(amount: Int) {
+    func addCoins(_ amount: Int) {
         let max = 999999999
         
         if (coins + amount) > max {
@@ -175,7 +175,7 @@ class GameDataManager {
 
             for value in Constant.CoinUnlockedAt {                
                 if highscore >= value {
-                    index = 1 + Constant.CoinUnlockedAt.indexOf(value)!
+                    index = 1 + Constant.CoinUnlockedAt.index(of: value)!
                 } else {
                     break
                 }
@@ -191,7 +191,7 @@ class GameDataManager {
         }
     }
     
-    func subtractCoins(amount: Int) {
+    func subtractCoins(_ amount: Int) {
         coins -= amount
     }
     
@@ -199,7 +199,7 @@ class GameDataManager {
         gamesPlayed += 1
     }
     
-    func increaseRewardChance(num: Int) {
+    func increaseRewardChance(_ num: Int) {
         // Reward chance increases by 3/6/9 % based on number of colors selected
         rewardChance += num * 3
     }
@@ -208,41 +208,47 @@ class GameDataManager {
         rewardChance = 0
     }
     
-    func addNewAchievementTracker(name: String) {
+    func addNewAchievementTracker(_ name: String) {
         achievementTracker[name] = 0
     }
     
-    func incrementAchievement(name: AchievementName) {
+    func incrementAchievement(_ name: AchievementName) {
         if let value = achievementTracker[name.rawValue] {
             achievementTracker[name.rawValue] = value + 1
         }
         
         Achievements.update(name)        
     }
-        
-    func updateHighestWager(wager: Int) {
+    
+    // DELETE: Test again
+    func updateHighestWager(_ wager: Int) {
         let key = AchievementName.HighestWager.rawValue
         
-        if wager > achievementTracker[key] {
-            achievementTracker[key] = wager
+        if let value = achievementTracker[key] {
+            if wager > value {
+                achievementTracker[key] = wager
             
+                Achievements.update(.HighestWager)
+            }
+        } else {
+            achievementTracker[key] = wager
             Achievements.update(.HighestWager)
         }
     }
     
-    func addPowerUpCount(powerUpKey: String, num: Int) {
+    func addPowerUpCount(_ powerUpKey: String, num: Int) {
         if let value = powerUps[powerUpKey] {
             powerUps[powerUpKey] = value + num
         }
     }
     
-    func subtractPowerUpCount(powerUpKey: String, num: Int) {
+    func subtractPowerUpCount(_ powerUpKey: String, num: Int) {
         if let value = powerUps[powerUpKey] {
             powerUps[powerUpKey] = value - num
         }
     }
     
-    func getRewardsDiceCount(diceKey: String) -> Int {
+    func getRewardsDiceCount(_ diceKey: String) -> Int {
         if let value = rewardsDice[diceKey] {
             return value
         } else {
@@ -250,13 +256,13 @@ class GameDataManager {
         }
     }
     
-    func addRewardsDiceCount(diceKey: String, num: Int) {
+    func addRewardsDiceCount(_ diceKey: String, num: Int) {
         if let value = rewardsDice[diceKey] {
             rewardsDice[diceKey] = value + num
         }
     }
     
-    func subtractRewardsDiceCount(diceKey: String, num: Int) {
+    func subtractRewardsDiceCount(_ diceKey: String, num: Int) {
         if let value = rewardsDice[diceKey] {
             rewardsDice[diceKey] = value - num
         }

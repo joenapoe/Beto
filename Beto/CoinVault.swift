@@ -23,7 +23,7 @@ class CoinVault: DropdownNode {
         let infoButton = ButtonNode(defaultButtonImage: "infoButton")
         infoButton.position = CGPoint(x: 120, y: -75)
         
-        for (index, betValue) in Constant.Denominations.enumerate() {
+        for (index, betValue) in Constant.Denominations.enumerated() {
             let coin = Coin(value: betValue, unlocked: index <= GameData.coinsUnlocked) 
             coin.size = CGSize(width: 38, height: 39)
             
@@ -50,8 +50,8 @@ class CoinVault: DropdownNode {
         infoButton.action = {
             infoOverlay.alpha = 0.0
             
-            let fadeIn = SKAction.fadeAlphaTo(1.0, duration: 0.2)
-            infoOverlay.runAction(fadeIn)
+            let fadeIn = SKAction.fadeAlpha(to: 1.0, duration: 0.2)
+            infoOverlay.run(fadeIn)
             
             vault.addChild(infoOverlay)
         }
@@ -63,7 +63,7 @@ class CoinVault: DropdownNode {
         for coin in coins {
             let coinHolder = SKSpriteNode(imageNamed: "coinHolder")
             coinHolder.size = CGSize(width: 42, height: 42)
-            coinHolder.position = pointForPosition(coins.indexOf(coin)!)
+            coinHolder.position = pointForPosition(coins.index(of: coin)!)
             
             coin.coinSelectedHandler = handleCoinSelected
             coin.position = CGPoint(x: 1, y: -1)
@@ -73,7 +73,7 @@ class CoinVault: DropdownNode {
         }
     }
         
-    func handleCoinSelected(coin: Coin) {
+    func handleCoinSelected(_ coin: Coin) {
         GameData.setDenomination(coin.value)
         GameData.save()
         
@@ -81,7 +81,7 @@ class CoinVault: DropdownNode {
         close()
     }
     
-    func pointForPosition(position: Int) -> CGPoint {
+    func pointForPosition(_ position: Int) -> CGPoint {
         var column = 0
         var row = 0
         

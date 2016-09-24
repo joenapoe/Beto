@@ -9,9 +9,9 @@
 import SpriteKit
 
 class DropdownNode {
-    private let layer: SKNode
-    private var container: SKNode
-    private let background: SKSpriteNode
+    fileprivate let layer: SKNode
+    fileprivate var container: SKNode
+    fileprivate let background: SKSpriteNode
     
     init(container: SKSpriteNode) {
         layer = SKNode()
@@ -19,19 +19,19 @@ class DropdownNode {
         
         self.container = container
         
-        background = SKSpriteNode(color: .blackColor(), size: CGSize(width: ScreenSize.Width, height: ScreenSize.Height))
+        background = SKSpriteNode(color: UIColor.black, size: CGSize(width: ScreenSize.Width, height: ScreenSize.Height))
         background.alpha = 0.0
     }
     
     func createLayer() -> SKNode {
         // Run SKActions
-        let fadeIn = SKAction.fadeAlphaTo(0.6, duration: 0.3)
-        background.runAction(fadeIn)
+        let fadeIn = SKAction.fadeAlpha(to: 0.6, duration: 0.3)
+        background.run(fadeIn)
         
-        let dropDown = SKAction.moveToY(0, duration: 0.3)
-        let compress = SKAction.scaleXBy(1.02, y: 0.9, duration: 0.2)
-        let actions = SKAction.sequence([dropDown, compress, compress.reversedAction()])
-        container.runAction(actions)
+        let dropDown = SKAction.moveTo(y: 0, duration: 0.3)
+        let compress = SKAction.scaleX(by: 1.02, y: 0.9, duration: 0.2)
+        let actions = SKAction.sequence([dropDown, compress, compress.reversed()])
+        container.run(actions)
      
         // Designate positions
         container.position = CGPoint(x: 0, y: ScreenSize.Height)
@@ -43,18 +43,18 @@ class DropdownNode {
     }
         
     func close() {
-        let wait = SKAction.waitForDuration(0.5)
+        let wait = SKAction.wait(forDuration: 0.5)
         
-        let exitScreen = SKAction.moveToY(ScreenSize.Height, duration: 0.4)
+        let exitScreen = SKAction.moveTo(y: ScreenSize.Height, duration: 0.4)
         let vaultActions = SKAction.sequence([exitScreen, SKAction.removeFromParent()])
-        container.runAction(vaultActions)
+        container.run(vaultActions)
         
-        let fadeOut = SKAction.fadeAlphaTo(0.0, duration: 0.3)
+        let fadeOut = SKAction.fadeAlpha(to: 0.0, duration: 0.3)
         let backgroundActions = SKAction.sequence([fadeOut, SKAction.removeFromParent()])
-        background.runAction(backgroundActions)
+        background.run(backgroundActions)
         
         let actions = SKAction.sequence([wait, SKAction.removeFromParent()])
-        layer.runAction(actions)
+        layer.run(actions)
     }
 }
 

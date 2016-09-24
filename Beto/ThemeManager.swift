@@ -9,50 +9,90 @@
 import Foundation
 
 class ThemeManager {
-    private(set) var themes = [Theme]()
+    fileprivate(set) var themes = [Theme]()
 
     init() {
         let defaultTheme = Theme(themeName: "Default")
         themes.append(defaultTheme)
         
-        let blueTheme = Theme(themeName: "Blue")
-        blueTheme.setPrice(.Basic)
-        themes.append(blueTheme)
+//        let blueTheme = Theme(themeName: "Aqua")
+//        blueTheme.setPrice(.basic)
+//        themes.append(blueTheme)
+//        
+//        let redTheme = Theme(themeName: "Red")
+//        redTheme.setPrice(.basic)
+//        themes.append(redTheme)
+//        
+//        let greenTheme = Theme(themeName: "Green")
+//        greenTheme.setPrice(.basic)
+//        themes.append(greenTheme)
+//        
+//        let purpleTheme = Theme(themeName: "Purple")
+//        purpleTheme.setPrice(.basic)
+//        themes.append(purpleTheme)
+//        
+//        let yellowTheme = Theme(themeName: "Yellow")
+//        yellowTheme.setPrice(.premium)
+//        themes.append(yellowTheme)
+//        
+//        let cyanTheme = Theme(themeName: "Cyan")
+//        cyanTheme.setPrice(.premium)
+//        themes.append(cyanTheme)
+//        
+//        let blackTheme = Theme(themeName: "Black")
+//        blackTheme.setPrice(.premium)
+//        themes.append(blackTheme)
+//        
+//        let azulTheme = Theme(themeName: "Azul")
+//        azulTheme.setPrice(ThemePrice.legendary)
+//        themes.append(azulTheme)
+//        
+//        let midnightTheme = Theme(themeName: "Midnight")
+//        midnightTheme.setPrice(ThemePrice.legendary)
+//        themes.append(midnightTheme)
         
-        let redTheme = Theme(themeName: "Red")
-        redTheme.setPrice(.Basic)
-        themes.append(redTheme)
+        let aqua = Theme(themeName: "Aqua")
+        aqua.setPrice(.basic)
+        themes.append(aqua)
         
-        let greenTheme = Theme(themeName: "Green")
-        greenTheme.setPrice(.Basic)
-        themes.append(greenTheme)
+        let azure = Theme(themeName: "Azure")
+        azure.setPrice(.basic)
+        themes.append(azure)
         
-        let purpleTheme = Theme(themeName: "Purple")
-        purpleTheme.setPrice(.Basic)
-        themes.append(purpleTheme)
+        let beach = Theme(themeName: "Beach")
+        beach.setPrice(.basic)
+        themes.append(beach)
         
-        let yellowTheme = Theme(themeName: "Yellow")
-        yellowTheme.setPrice(.Premium)
-        themes.append(yellowTheme)
+        let candy = Theme(themeName: "Candy")
+        candy.setPrice(.basic)
+        themes.append(candy)
         
-        let cyanTheme = Theme(themeName: "Cyan")
-        cyanTheme.setPrice(.Premium)
-        themes.append(cyanTheme)
+        let mango = Theme(themeName: "Mango")
+        mango.setPrice(.basic)
+        themes.append(mango)
         
-        let blackTheme = Theme(themeName: "Black")
-        blackTheme.setPrice(.Premium)
-        themes.append(blackTheme)
+        let peach = Theme(themeName: "Peach")
+        peach.setPrice(.basic)
+        themes.append(peach)
         
-        let azulTheme = Theme(themeName: "Azul")
-        azulTheme.setPrice(ThemePrice.Legendary)
-        themes.append(azulTheme)
+        let sky = Theme(themeName: "Sky")
+        sky.setPrice(.basic)
+        themes.append(sky)
         
-        let midnightTheme = Theme(themeName: "Midnight")
-        midnightTheme.setPrice(ThemePrice.Legendary)
-        themes.append(midnightTheme)
+        let sunset = Theme(themeName: "Sunset")
+        sunset.setPrice(.basic)
+        themes.append(sunset)
+        
+        let constellations = Theme(themeName: "Constellations")
+        constellations.setPrice(.premium)
+        themes.append(constellations)
+        
+        let galaxy = Theme(themeName: "Galaxy")
+        galaxy.setPrice(.premium)
+        themes.append(galaxy)        
     }
 
-    func getTheme(themeName: String) -> Theme {
+    func getTheme(_ themeName: String) -> Theme {
         for theme in themes {
             if theme.name == themeName {
                 return theme

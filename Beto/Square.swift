@@ -25,9 +25,9 @@ class Square: ButtonNode {
         
         
         label = SKLabelNode(fontNamed: Constant.FontNameCondensed)
-        label.hidden = true
-        label.horizontalAlignmentMode = .Center
-        label.verticalAlignmentMode = .Center
+        label.isHidden = true
+        label.horizontalAlignmentMode = .center
+        label.verticalAlignmentMode = .center
         
         let activeButtonImage = defaultButtonImage + "_active"
         
@@ -59,14 +59,14 @@ class Square: ButtonNode {
         label.text = formattedWager
     }
     
-    private func formatStringFromNumber(number: Int) -> String {
+    fileprivate func formatStringFromNumber(_ number: Int) -> String {
         if number >= 1000000 {
-            let formatter = NSNumberFormatter()
+            let formatter = NumberFormatter()
             formatter.minimumFractionDigits = 0
             formatter.maximumFractionDigits = 2
             
             let newNumber: Double = floor(Double(number) / 10000) / 100.0
-            let formattedNumber = formatter.stringFromNumber(newNumber)!
+            let formattedNumber = formatter.string(from: NSNumber(value: newNumber))
             
             return "\(formattedNumber)M"
         } else {

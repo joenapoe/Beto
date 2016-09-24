@@ -59,17 +59,17 @@ class MenuScene: SKScene {
     }
     
     func presentBoardScene() {
-        let transition = SKTransition.flipVerticalWithDuration(0.4)
+        let transition = SKTransition.flipVertical(withDuration: 0.4)
         let boardScene = BoardScene(size: self.size)
-        boardScene.scaleMode = .AspectFill
+        boardScene.scaleMode = .aspectFill
         
         view!.presentScene(boardScene, transition: transition)
     }
     
     func presentThemesScene() {
-        let transition = SKTransition.flipVerticalWithDuration(0.4)
+        let transition = SKTransition.flipVertical(withDuration: 0.4)
         let themesScene = ThemesScene(size: self.size)
-        themesScene.scaleMode = .AspectFill
+        themesScene.scaleMode = .aspectFill
         
         view!.presentScene(themesScene, transition: transition)
     }
@@ -85,8 +85,8 @@ class MenuScene: SKScene {
         
         infoOverlay.alpha = 0.0
         
-        let fadeIn = SKAction.fadeAlphaTo(1.0, duration: 0.2)
-        infoOverlay.runAction(fadeIn)
+        let fadeIn = SKAction.fadeAlpha(to: 1.0, duration: 0.2)
+        infoOverlay.run(fadeIn)
         
         addChild(infoOverlay)
     }

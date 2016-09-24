@@ -35,7 +35,7 @@ class Achievement {
     
     // Creates a new entry for achievementTracker in the plist for newly added achievements
     func startTrackingAchievement() {
-        if GameData.achievementTracker.indexForKey(name) == nil {
+        if GameData.achievementTracker.index(forKey: name) == nil {
             GameData.addNewAchievementTracker(name)
             GameData.save()
         }

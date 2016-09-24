@@ -22,10 +22,10 @@ enum RewardsDiceKey: String {
 class RewardsDice: ButtonNode {
     let key: RewardsDiceKey
     
-    private var count: Int
+    fileprivate var count: Int
 
-    private let label: SKLabelNode
-    private let labelShadow: SKLabelNode
+    fileprivate let label: SKLabelNode
+    fileprivate let labelShadow: SKLabelNode
     
     var openRewardsDiceHandler: ((RewardsDice) -> ())?
     
@@ -44,11 +44,11 @@ class RewardsDice: ButtonNode {
         
         labelShadow = label.createLabelShadow()
     
-        let imageName = key.rawValue.lowercaseString + "Reward"
+        let imageName = key.rawValue.lowercased() + "Reward"
         
         super.init(defaultButtonImage: imageName, activeButtonImage: imageName)
         
-        activeButton.color = UIColor.blackColor()
+        activeButton.color = UIColor.black
         activeButton.colorBlendFactor = 0.3
 
         // NOTE: -99 is for when you find a rewards dice during gameplay

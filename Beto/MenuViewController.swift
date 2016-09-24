@@ -15,12 +15,12 @@ class MenuViewController: UIViewController, GADInterstitialDelegate {
 
     @IBOutlet weak var bannerView: GADBannerView!
     
-    override func shouldAutorotate() -> Bool {
+    override var shouldAutorotate : Bool {
         return true
     }
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.AllButUpsideDown
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.allButUpsideDown
     }
     
     override func didReceiveMemoryWarning() {
@@ -28,11 +28,11 @@ class MenuViewController: UIViewController, GADInterstitialDelegate {
         // Release any cached data, images, etc that aren't in use.
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         if GameData.gamesPlayed % 10 == 0 || GameData.coins == 0 {
             showInterstitialAD()
         }
@@ -43,11 +43,11 @@ class MenuViewController: UIViewController, GADInterstitialDelegate {
                 
         // Configure the view.
         let skView = view as! SKView
-        skView.multipleTouchEnabled = false
+        skView.isMultipleTouchEnabled = false
         
         // Create and configure the scene.
         scene = MenuScene(size: skView.bounds.size)
-        scene.scaleMode = .AspectFill
+        scene.scaleMode = .aspectFill
         
         // Present the scene.
         skView.presentScene(scene)
@@ -57,7 +57,7 @@ class MenuViewController: UIViewController, GADInterstitialDelegate {
         bannerView.rootViewController = self
         let test = GADRequest()
         test.testDevices = ["57738ac8abf9499b8b4df6e379d05c76"]
-        bannerView.loadRequest(test)
+        bannerView.load(test)
         
         interstitialAd = reloadInterstitialAd()
     }
@@ -68,25 +68,25 @@ class MenuViewController: UIViewController, GADInterstitialDelegate {
         let request = GADRequest()
 //        request.testDevices = ["57738ac8abf9499b8b4df6e379d05c76"]
         interstitial.delegate = self
-        interstitial.loadRequest(request)
+        interstitial.load(request)
         
         return interstitial
     }
     
-    func interstitialDidDismissScreen(ad: GADInterstitial!) {
+    func interstitialDidDismissScreen(_ ad: GADInterstitial!) {
         self.interstitialAd = reloadInterstitialAd()
     }
     
     func showInterstitialAD() {
         if interstitialAd.isReady {
-            self.interstitialAd.presentFromRootViewController(self)
+            self.interstitialAd.present(fromRootViewController: self)
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let boardScene = sender as? BoardScene {
             if segue.identifier == "showGameScene" {
-                let destinationVC = segue.destinationViewController as! GameViewController
+                let destinationVC = segue.destination as! GameViewController
                 destinationVC.boardScene = boardScene
             }
         }

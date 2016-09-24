@@ -35,7 +35,7 @@ enum AchievementName: String {
 }
 
 class AchievementsManager {
-    private(set) var list = [Achievement]()
+    fileprivate(set) var list = [Achievement]()
     
     init() {
         /* 
@@ -380,8 +380,8 @@ class AchievementsManager {
         list.append(ruby)
     }
     
-    func update(name: AchievementName) {
-        let index = list.indexOf({$0.name == name.rawValue})
+    func update(_ name: AchievementName) {
+        let index = list.index(where: {$0.name == name.rawValue})
         let achievement = list[index!]
         let oldLevel = achievement.level
         
@@ -393,15 +393,15 @@ class AchievementsManager {
         }
     }
 
-    private func colorWinRequirements(color: Color, values: [Int]) -> [String] {
+    fileprivate func colorWinRequirements(_ color: Color, values: [Int]) -> [String] {
         return ["Place \(values[0]) winning bets on \(color.rawValue)", "Place \(values[1]) winning bets on \(color.rawValue)", "Place \(values[2]) winning bets on \(color.rawValue)"]
     }
     
-    private func powerUpRequirements(powerUp: String, values: [Int]) -> [String] {
+    fileprivate func powerUpRequirements(_ powerUp: String, values: [Int]) -> [String] {
         return ["Use \(powerUp) \(values[0]) times", "Use \(powerUp) \(values[1]) times", "Use \(powerUp) \(values[2]) times"]
     }
     
-    private func rewardsDiceRequirements(dice: String, values: [Int]) -> [String] {
+    fileprivate func rewardsDiceRequirements(_ dice: String, values: [Int]) -> [String] {
         return ["Open \(values[0]) \(dice) rewards dice", "Open \(values[1]) \(dice) rewards dice", "Open \(values[2]) \(dice) rewards dice"]
     }
 }

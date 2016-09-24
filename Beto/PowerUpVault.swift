@@ -47,8 +47,8 @@ class PowerUpVault: DropdownNode {
         infoButton.action = {
             infoOverlay.alpha = 0.0
             
-            let fadeIn = SKAction.fadeAlphaTo(1.0, duration: 0.2)
-            infoOverlay.runAction(fadeIn)
+            let fadeIn = SKAction.fadeAlpha(to: 1.0, duration: 0.2)
+            infoOverlay.run(fadeIn)
             
             vault.addChild(infoOverlay)
         }
@@ -95,12 +95,12 @@ class PowerUpVault: DropdownNode {
         }
     }
     
-    func handleActivatePowerUp(powerUp: PowerUp) {
+    func handleActivatePowerUp(_ powerUp: PowerUp) {
         close()
         activatePowerUpHandler!(powerUp)
     }
     
-    func pointForPosition(position: Int) -> CGPoint {
+    func pointForPosition(_ position: Int) -> CGPoint {
         var column = 0
         var row = 0
         
