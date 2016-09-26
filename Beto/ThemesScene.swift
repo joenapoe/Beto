@@ -9,14 +9,14 @@
 import SpriteKit
 
 class ThemesScene: SKScene {
-    private var background: SKSpriteNode!
-    private var container: SKSpriteNode!
-    private var themePreviews: [ButtonNode]!
-    private var starCoinsLabel: SKLabelNode!
+    fileprivate var background: SKSpriteNode!
+    fileprivate var container: SKSpriteNode!
+    fileprivate var themePreviews: [ButtonNode]!
+    fileprivate var starCoinsLabel: SKLabelNode!
     
-    private var currentPage = 0
-    private var perPageCount = 12
-    private var themeManager = ThemeManager()
+    fileprivate var currentPage = 0
+    fileprivate var perPageCount = 12
+    fileprivate var themeManager = ThemeManager()
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder) is not used in this app")
@@ -38,7 +38,7 @@ class ThemesScene: SKScene {
         var infoButtonPosition = CGPoint(x: 130, y: -206)
 
         // Custom values for iPhone4
-        if UIScreen.mainScreen().bounds.height == 480 {
+        if UIScreen.main.bounds.height == 480 {
             containerHeight = 303
             headerPosition = 221
             previousButtonPosition = CGPoint(x: -25, y: -160)
@@ -71,15 +71,15 @@ class ThemesScene: SKScene {
         // Title label
         let titleLabel = SKLabelNode(text: "THEMES")
         titleLabel.fontName = Constant.FontNameCondensed
-        titleLabel.fontColor = UIColor.whiteColor()
+        titleLabel.fontColor = UIColor.white
         titleLabel.fontSize = 24
-        titleLabel.horizontalAlignmentMode = .Center
-        titleLabel.verticalAlignmentMode = .Center
+        titleLabel.horizontalAlignmentMode = .center
+        titleLabel.verticalAlignmentMode = .center
         titleLabel.position = CGPoint(x: 0, y: 0)
         
         let titleShadow = titleLabel.createLabelShadow()
-        titleShadow.horizontalAlignmentMode = .Center
-        titleShadow.verticalAlignmentMode = .Center
+        titleShadow.horizontalAlignmentMode = .center
+        titleShadow.verticalAlignmentMode = .center
         
         // Star Coins Button
         let starCoinsNode = ButtonNode(defaultButtonImage: "starCoinsButton")
@@ -89,8 +89,8 @@ class ThemesScene: SKScene {
         starCoinsLabel = SKLabelNode(text: "\(GameData.starCoins)")
         starCoinsLabel.fontName = Constant.FontNameCondensed
         starCoinsLabel.fontSize = 14
-        starCoinsLabel.horizontalAlignmentMode = .Center
-        starCoinsLabel.verticalAlignmentMode = .Center
+        starCoinsLabel.horizontalAlignmentMode = .center
+        starCoinsLabel.verticalAlignmentMode = .center
         starCoinsLabel.position = CGPoint(x: 5, y: 0)
         
         // Add labels to star node
@@ -126,8 +126,8 @@ class ThemesScene: SKScene {
         infoButton.action = {
             infoOverlay.alpha = 0.0
             
-            let fadeIn = SKAction.fadeAlphaTo(1.0, duration: 0.2)
-            infoOverlay.runAction(fadeIn)
+            let fadeIn = SKAction.fadeAlpha(to: 1.0, duration: 0.2)
+            infoOverlay.run(fadeIn)
             
             self.addChild(infoOverlay)
         }
@@ -162,7 +162,7 @@ class ThemesScene: SKScene {
         }
     }
     
-    func createPage(pageNumber: Int) {
+    func createPage(_ pageNumber: Int) {
         for preview in themePreviews {
             preview.removeFromParent()
         }
@@ -175,7 +175,7 @@ class ThemesScene: SKScene {
             if position < themeManager.themes.count {
                 let theme = themeManager.themes[position]
                 
-                let sprite = ButtonNode(defaultButtonImage: "\(theme.name.lowercaseString)Preview")
+                let sprite = ButtonNode(defaultButtonImage: "\(theme.name.lowercased())Preview")
                 sprite.size = CGSize(width: 92, height: 92)
                 sprite.position = pointForPosition(position % perPageCount, size: container.size)
                 sprite.action = {
@@ -193,7 +193,7 @@ class ThemesScene: SKScene {
                             
                         var containerPosition = CGPoint(x: 0, y: ScreenSize.Height)
                         
-                        if UIScreen.mainScreen().bounds.height == 480 {
+                        if UIScreen.main.bounds.height == 480 {
                             container.setScale(0.81)
                             containerPosition = CGPoint(x: 0, y: ScreenSize.Height + 40)
                         }
@@ -218,8 +218,8 @@ class ThemesScene: SKScene {
                         let priceLabel = SKLabelNode(text: "\(theme.price)")
                         priceLabel.fontName = Constant.FontNameCondensed
                         priceLabel.fontSize = 18
-                        priceLabel.horizontalAlignmentMode = .Center
-                        priceLabel.verticalAlignmentMode = .Center
+                        priceLabel.horizontalAlignmentMode = .center
+                        priceLabel.verticalAlignmentMode = .center
                         priceLabel.position = CGPoint(x: 10, y: 0)
                         
                         buyThemeButton.addChild(priceLabel)
@@ -234,7 +234,7 @@ class ThemesScene: SKScene {
                         closeButton.action = node.close
                         
                         if GameData.starCoins >= theme.price {
-                            overlay.hidden = true
+                            overlay.isHidden = true
                             
                             buyThemeButton.action = {
                                 theme.purchase()
@@ -259,14 +259,14 @@ class ThemesScene: SKScene {
     }
     
     func presentMenuScene() {
-        let transition = SKTransition.flipVerticalWithDuration(0.4)
+        let transition = SKTransition.flipVertical(withDuration: 0.4)
         let menuScene = MenuScene(size: self.size)
-        menuScene.scaleMode = .AspectFill
+        menuScene.scaleMode = .aspectFill
         
         view!.presentScene(menuScene, transition: transition)
     }
     
-    func pointForPosition(position: Int, size: CGSize) -> CGPoint {
+    func pointForPosition(_ position: Int, size: CGSize) -> CGPoint {
         let row = position / 3
         let column = position % 3
     

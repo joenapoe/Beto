@@ -9,38 +9,38 @@
 import SpriteKit
 
 class BoardScene: SKScene {
-    private let layer: SKNode
+    fileprivate let layer: SKNode
     
     // GameHUD
-    private let gameHUD: SKSpriteNode
-    private let menuButton: ButtonNode
-    private let highscoreButton: ButtonNode
-    private let highscoreLabel: SKLabelNode
-    private let betoCoinsButton: ButtonNode
-    private let coinsLabel: SKLabelNode
+    fileprivate let gameHUD: SKSpriteNode
+    fileprivate let menuButton: ButtonNode
+    fileprivate let highscoreButton: ButtonNode
+    fileprivate let highscoreLabel: SKLabelNode
+    fileprivate let betoCoinsButton: ButtonNode
+    fileprivate let coinsLabel: SKLabelNode
     
     // Board
-    private let board: SKSpriteNode
-    private let playButton: ButtonNode
-    private let clearReplayButton: ButtonNode
-    private let powerUpButton: ButtonNode
-    private let deactivatePowerUpSprite: SKSpriteNode
-    private let coinVaultButton: ButtonNode
-    private let diceVaultButton: ButtonNode
+    fileprivate let board: SKSpriteNode
+    fileprivate let playButton: ButtonNode
+    fileprivate let clearReplayButton: ButtonNode
+    fileprivate let powerUpButton: ButtonNode
+    fileprivate let deactivatePowerUpSprite: SKSpriteNode
+    fileprivate let coinVaultButton: ButtonNode
+    fileprivate let diceVaultButton: ButtonNode
 
     // Squares
-    private let squareSize: CGFloat = 92.0
-    private(set) var squaresSelectedCount = 0
-    private var squares: [Square]
-    private var winningSquares: [Square]
-    private var previousBets: [(color: Color, wager: Int)]
+    fileprivate let squareSize: CGFloat = 92.0
+    fileprivate(set) var squaresSelectedCount = 0
+    fileprivate var squares: [Square]
+    fileprivate var winningSquares: [Square]
+    fileprivate var previousBets: [(color: Color, wager: Int)]
     
-    private var dropdownQueue: [DropdownNode]
-    private var rewardTriggered = false
-    private var rewardBoostActivated = false
-    private var diceType: DiceType = .Default
+    fileprivate var dropdownQueue: [DropdownNode]
+    fileprivate var rewardTriggered = false
+    fileprivate var rewardBoostActivated = false
+    fileprivate var diceType: DiceType = .default
     
-    private(set) var activePowerUp = ""
+    fileprivate(set) var activePowerUp = ""
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder) is not used in this app")
@@ -74,8 +74,8 @@ class BoardScene: SKScene {
         coinsLabel = SKLabelNode()
         coinsLabel.fontName = Constant.FontNameCondensed
         coinsLabel.fontSize = 14
-        coinsLabel.horizontalAlignmentMode = .Center
-        coinsLabel.verticalAlignmentMode = .Center
+        coinsLabel.horizontalAlignmentMode = .center
+        coinsLabel.verticalAlignmentMode = .center
         
         highscoreButton = ButtonNode(defaultButtonImage: "highscoreButton")
         highscoreButton.size = CGSize(width: 100, height: 25)
@@ -84,8 +84,8 @@ class BoardScene: SKScene {
         highscoreLabel = SKLabelNode()
         highscoreLabel.fontName = Constant.FontNameCondensed
         highscoreLabel.fontSize = 14
-        highscoreLabel.horizontalAlignmentMode = .Center
-        highscoreLabel.verticalAlignmentMode = .Center
+        highscoreLabel.horizontalAlignmentMode = .center
+        highscoreLabel.verticalAlignmentMode = .center
         
         /***** Initialize Board *****/
         board = SKSpriteNode(imageNamed: GameData.theme.board)
@@ -167,7 +167,7 @@ class BoardScene: SKScene {
         
         // Add action to square and add each square to board
         for square in squares {
-            square.position = pointForPosition(squares.indexOf(square)!)
+            square.position = pointForPosition(squares.index(of: square)!)
             square.placeBetHandler = handlePlaceBet
             
             board.addChild(square)
@@ -184,7 +184,7 @@ class BoardScene: SKScene {
         background.size = self.frame.size
         
         if !Audio.musicMuted {
-            runAction(SKAction.waitForDuration(0.5), completion: {
+            run(SKAction.wait(forDuration: 0.5), completion: {
                 self.addChild(Audio.backgroundMusic)
             })
         }
@@ -195,22 +195,22 @@ class BoardScene: SKScene {
     }
     
     /***** GameHUD Functions *****/
-    func updateCoinsLabel(coins: Int) {
+    func updateCoinsLabel(_ coins: Int) {
         coinsLabel.text = formatStringFromNumber(coins)
     }
     
-    func updateHighscoreLabel(highscore: Int) {
+    func updateHighscoreLabel(_ highscore: Int) {
         highscoreLabel.text = formatStringFromNumber(highscore)
     }
     
-    private func formatStringFromNumber(number: Int) -> String {
+    fileprivate func formatStringFromNumber(_ number: Int) -> String {
         if number >= 1000000 {
-            let formatter = NSNumberFormatter()
+            let formatter = NumberFormatter()
             formatter.minimumFractionDigits = 0
             formatter.maximumFractionDigits = 2
             
             let newNumber: Double = floor(Double(number) / 10000) / 100.0
-            let formattedNumber = formatter.stringFromNumber(newNumber)!
+            let formattedNumber = formatter.string(from: NSNumber(value: newNumber))
             
             return "\(formattedNumber)M"
         } else {
@@ -218,7 +218,7 @@ class BoardScene: SKScene {
         }
     }
     
-    private func displayAchievements() {
+    fileprivate func displayAchievements() {
         let achievements = AchievementsListNode()
         let layer = achievements.createLayer()
         
@@ -226,7 +226,7 @@ class BoardScene: SKScene {
     }
     
     // DELETE: Might have to drop this feature
-    private func displayShop() {        
+    fileprivate func displayShop() {        
         let closeButton = ButtonNode(defaultButtonImage: "closeButton")
         closeButton.size = CGSize(width: 44, height: 45)
         closeButton.position = CGPoint(x: 140, y: 190)
@@ -236,7 +236,7 @@ class BoardScene: SKScene {
         container.position = CGPoint(x: 0, y: ScreenSize.Height)
         
         // Custom scale for iPhone 4 (Screen size: 320 x 480)
-        if UIScreen.mainScreen().bounds.height == 480 {
+        if UIScreen.main.bounds.height == 480 {
             container.setScale(0.93)
         }
         
@@ -244,16 +244,16 @@ class BoardScene: SKScene {
         coinsBackground.size = CGSize(width: 276, height: 55)
         coinsBackground.position = CGPoint(x: 0, y: 124)
         
-        let numberFormatter = NSNumberFormatter()
+        let numberFormatter = NumberFormatter()
         numberFormatter.groupingSeparator = " "
-        numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
-        let coins = numberFormatter.stringFromNumber(GameData.coins)
+        numberFormatter.numberStyle = NumberFormatter.Style.decimal
+        let coins = numberFormatter.string(from: NSNumber(value: GameData.coins))
         
         let coinsLabel = SKLabelNode(text: coins)
         coinsLabel.fontName = Constant.FontNameCondensed
         coinsLabel.fontSize = 28
-        coinsLabel.horizontalAlignmentMode = .Center
-        coinsLabel.verticalAlignmentMode = .Center
+        coinsLabel.horizontalAlignmentMode = .center
+        coinsLabel.verticalAlignmentMode = .center
         
         coinsBackground.addChild(coinsLabel)
         
@@ -290,7 +290,7 @@ class BoardScene: SKScene {
     }
     
     /***** Board Functions *****/
-    private func pointForPosition(position: Int) -> CGPoint {
+    fileprivate func pointForPosition(_ position: Int) -> CGPoint {
         var column = 0
         var row = 0
         
@@ -311,11 +311,11 @@ class BoardScene: SKScene {
         return CGPoint(x: offsetX, y: -Constant.Margin + offsetY)
     }
     
-    private func handlePlaceBet(square: Square) {
+    fileprivate func handlePlaceBet(_ square: Square) {
         let coinsAvailable = GameData.coins - getWagers()
         
         if coinsAvailable == 0 {
-            runAction(Audio.lostSound)
+            run(Audio.lostSound)
             return
         }
         
@@ -328,12 +328,12 @@ class BoardScene: SKScene {
     
             layer.addChild(colorLimitNode)
             
-            let fade = SKAction.fadeOutWithDuration(1.0)
+            let fade = SKAction.fadeOut(withDuration: 1.0)
             let actions = SKAction.sequence([fade, SKAction.removeFromParent()])
             
-            colorLimitNode.runAction(actions)
+            colorLimitNode.run(actions)
             
-            runAction(Audio.lostSound)
+            run(Audio.lostSound)
             
             return
         }
@@ -349,12 +349,12 @@ class BoardScene: SKScene {
         // from the GameData until after we roll the dice
         let coins = GameData.coins - getWagers()
         updateCoinsLabel(coins)
-        runAction(Audio.placeBetSound)
+        run(Audio.placeBetSound)
         
         square.updateLabel()
         
         if !square.selected {
-            square.label.hidden = false
+            square.label.isHidden = false
             square.selected = true
             
             squaresSelectedCount += 1
@@ -368,7 +368,7 @@ class BoardScene: SKScene {
         }
     }
     
-    private func playButtonPressed() {
+    fileprivate func playButtonPressed() {
         if getWagers() > 0 {
             // Reset previousBets
             previousBets = []
@@ -384,13 +384,13 @@ class BoardScene: SKScene {
         }
     }
     
-    private func replayButtonPressed() {
+    fileprivate func replayButtonPressed() {
         clearButtonPressed()
         
         for previousBet in previousBets {
-            if let index = squares.indexOf(squareWithColor(previousBet.color)) {
+            if let index = squares.index(of: squareWithColor(previousBet.color)) {
                 squares[index].wager = previousBet.wager
-                squares[index].label.hidden = false
+                squares[index].label.isHidden = false
                 squares[index].updateLabel()
                 squares[index].selected = true
                 
@@ -408,17 +408,17 @@ class BoardScene: SKScene {
         clearReplayButton.action = clearButtonPressed
     }
     
-    private func clearButtonPressed() {
+    fileprivate func clearButtonPressed() {
         // reset each square
         for square in squares {
             square.wager = 0
-            square.label.hidden = true
+            square.label.isHidden = true
             square.selected = false
         }
         
         resetSquaresSelectedCount()
         
-        runAction(Audio.clearBetSound)
+        run(Audio.clearBetSound)
         updateCoinsLabel(GameData.coins)
         
         toggleReplayButton()
@@ -441,14 +441,14 @@ class BoardScene: SKScene {
     }
     
     /***** Misc. Button Functions *****/
-    private func powerUpButtonPressed() {
+    fileprivate func powerUpButtonPressed() {
         let powerUpVault = PowerUpVault(activePowerUp: activePowerUp)
         powerUpVault.activatePowerUpHandler = activatePowerUp
         
         addChild(powerUpVault.createLayer())
     }
     
-    private func activatePowerUp(powerUp: PowerUp) {
+    fileprivate func activatePowerUp(_ powerUp: PowerUp) {
         deactivatePowerUpButtonPressed()
         
         let button = ButtonNode(defaultButtonImage: powerUp.name!)
@@ -472,7 +472,7 @@ class BoardScene: SKScene {
         activePowerUp = ""
     }
     
-    private func coinVaultButtonPressed() {
+    fileprivate func coinVaultButtonPressed() {
         let coinVault = CoinVault()
         coinVault.changeDenominationHandler = {
             self.coinVaultButton.changeTexture("coin\(GameData.betDenomination)")
@@ -481,20 +481,20 @@ class BoardScene: SKScene {
         addChild(coinVault.createLayer())
     }
     
-    private func diceVaultButtonPressed() {
+    fileprivate func diceVaultButtonPressed() {
         let rewardsDiceVault = RewardsDiceVault()
         rewardsDiceVault.openRewardsDiceHandler = openRewardsDice
         
         addChild(rewardsDiceVault.createLayer())
     }
     
-    private func openRewardsDice(dice: RewardsDice) {
+    fileprivate func openRewardsDice(_ dice: RewardsDice) {
         let openRewards = OpenRewardsNode(diceKey: dice.key)
         addChild(openRewards.createLayer())        
     }
     
     /***** Gameplay Functions *****/    
-    func resolvePayout(square: Square) {
+    func resolvePayout(_ square: Square) {
         if !winningSquares.contains(square) {
             winningSquares.append(square)
         }
@@ -505,7 +505,7 @@ class BoardScene: SKScene {
             
             GameData.addCoins(winnings)
         
-            runAction(Audio.winSound)
+            run(Audio.winSound)
             
             // Update labels
             updateCoinsLabel(GameData.coins)
@@ -513,7 +513,7 @@ class BoardScene: SKScene {
         }
     }
     
-    func calculateWinnings(square: Square) -> Int {
+    func calculateWinnings(_ square: Square) -> Int {
         var winnings = square.wager
         
         if activePowerUp == "" {
@@ -527,7 +527,7 @@ class BoardScene: SKScene {
         return winnings
     }
     
-    func didPayout(square: Square) -> Bool {
+    func didPayout(_ square: Square) -> Bool {
         if square.wager > 0 {
             return true
         } else {
@@ -535,7 +535,7 @@ class BoardScene: SKScene {
         }
     }
     
-    func resolveWagers(didWin: Bool) {
+    func resolveWagers(_ didWin: Bool) {
         var highestWager = 0
         
         // Add winning wagers back to GameData.coins, clear the board
@@ -553,13 +553,13 @@ class BoardScene: SKScene {
                 highestWager = square.wager
             }
             
-            let scaleAction = SKAction.scaleTo(0.0, duration: 0.3)
-            scaleAction.timingMode = .EaseOut
-            square.label.runAction(scaleAction)
-            square.label.hidden = true
+            let scaleAction = SKAction.scale(to: 0.0, duration: 0.3)
+            scaleAction.timingMode = .easeOut
+            square.label.run(scaleAction)
+            square.label.isHidden = true
             
-            let restore = SKAction.scaleTo(1.0, duration: 0.3)
-            square.label.runAction(restore)
+            let restore = SKAction.scale(to: 1.0, duration: 0.3)
+            square.label.run(restore)
             square.wager = 0
             square.selected = false
             
@@ -585,7 +585,7 @@ class BoardScene: SKScene {
         return wagers
     }
     
-    func squareWithColor(color: Color) -> Square! {
+    func squareWithColor(_ color: Color) -> Square! {
         for square in squares {
             if square.color == color {
                 return square
@@ -601,12 +601,12 @@ class BoardScene: SKScene {
     }
     
     /***** Dropdown Functions *****/
-    private func addToDropdownQueue(achievement: Achievement) {
+    fileprivate func addToDropdownQueue(_ achievement: Achievement) {
         let unlocked = UnlockedLevel(achievement: achievement)
         dropdownQueue.append(unlocked)
     }
     
-    private func showUnlockedCoin() {
+    fileprivate func showUnlockedCoin() {
         let container = SKSpriteNode(imageNamed: "rewardUnlocked")
         container.size = CGSize(width: 304, height: 225)
         container.position = CGPoint(x: 0, y: ScreenSize.Height)
@@ -615,7 +615,7 @@ class BoardScene: SKScene {
         
         let titleLabel = SKLabelNode(text: "COIN UNLOCKED")
         titleLabel.fontName = Constant.FontNameExtraBold
-        titleLabel.fontColor = UIColor.whiteColor()
+        titleLabel.fontColor = UIColor.white
         titleLabel.fontSize = 14
         titleLabel.position = CGPoint(x: 0, y: 50)
         
@@ -623,7 +623,7 @@ class BoardScene: SKScene {
         
         let descriptionLabel = SKLabelNode(text: "Now available in the Coin Vault")
         descriptionLabel.fontName = Constant.FontName
-        descriptionLabel.fontColor = UIColor.darkGrayColor()
+        descriptionLabel.fontColor = UIColor.darkGray
         descriptionLabel.fontSize = 10
         descriptionLabel.position = CGPoint(x: 0, y: 35)
         
@@ -642,7 +642,7 @@ class BoardScene: SKScene {
         if GameData.coinsUnlocked != 7 {
             let nextCoinLabel = SKLabelNode(text: "Next Coin unlocks at \(Constant.CoinUnlockedAt[GameData.coinsUnlocked]) coins")
             nextCoinLabel.fontName = Constant.FontName
-            nextCoinLabel.fontColor = UIColor.darkGrayColor()
+            nextCoinLabel.fontColor = UIColor.darkGray
             nextCoinLabel.fontSize = 10
             nextCoinLabel.position = CGPoint(x: 0, y: -40)
             
@@ -840,7 +840,7 @@ class BoardScene: SKScene {
             
             let titleLabel = SKLabelNode(text: flavorText[rand])
             titleLabel.fontName = Constant.FontNameExtraBold
-            titleLabel.fontColor = UIColor.whiteColor()
+            titleLabel.fontColor = UIColor.white
             titleLabel.fontSize = 14
             titleLabel.position = CGPoint(x: 0, y: 65)
             
@@ -875,7 +875,7 @@ class BoardScene: SKScene {
             addChild(goldenTicket.createLayer())
         }
         
-        for node in dropdownQueue.reverse() {
+        for node in dropdownQueue.reversed() {
             addChild(node.createLayer())
         }
         
@@ -883,15 +883,15 @@ class BoardScene: SKScene {
     }
     
     func presentGameScene() {
-        self.view!.window!.rootViewController!.performSegueWithIdentifier("showGameScene", sender: self)
+        self.view!.window!.rootViewController!.performSegue(withIdentifier: "showGameScene", sender: self)
     }
     
     func presentMenuScene() {
         Audio.backgroundMusic.removeFromParent()
         
-        let transition = SKTransition.flipVerticalWithDuration(0.4)
+        let transition = SKTransition.flipVertical(withDuration: 0.4)
         let menuScene = MenuScene(size: self.size)
-        menuScene.scaleMode = .AspectFill
+        menuScene.scaleMode = .aspectFill
         
         view!.presentScene(menuScene, transition: transition)
     }

@@ -9,7 +9,7 @@
 import SpriteKit
 
 class PowerUp: ButtonNode {
-    private var count: Int
+    fileprivate var count: Int
     
     var activatePowerUpHandler: ((PowerUp) -> ())?
     
@@ -31,7 +31,7 @@ class PowerUp: ButtonNode {
 
         self.name = name
         
-        activeButton.color = UIColor.blackColor()
+        activeButton.color = UIColor.black
         activeButton.colorBlendFactor = 0.3
         
         addChild(labelShadow)

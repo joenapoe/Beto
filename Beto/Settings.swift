@@ -9,17 +9,17 @@
 import SpriteKit
 
 class Settings {
-    private let layer: SKNode
-    private let background: SKSpriteNode
-    private let soundButton: ButtonNode
-    private let musicButton: ButtonNode
-    private let closeButton: ButtonNode
+    fileprivate let layer: SKNode
+    fileprivate let background: SKSpriteNode
+    fileprivate let soundButton: ButtonNode
+    fileprivate let musicButton: ButtonNode
+    fileprivate let closeButton: ButtonNode
     
     init() {
         layer = SKNode()
         layer.setScale(Constant.ScaleFactor)
         
-        background = SKSpriteNode(color: .blackColor(), size: CGSize(width: ScreenSize.Width, height: ScreenSize.Height))
+        background = SKSpriteNode(color: UIColor.black, size: CGSize(width: ScreenSize.Width, height: ScreenSize.Height))
         background.alpha = 0.0
         
         closeButton = ButtonNode(defaultButtonImage: "closeButton_Large")
@@ -45,8 +45,8 @@ class Settings {
     
     func createLayer() -> SKNode {
         // Run SKActions
-        let fadeIn = SKAction.fadeAlphaTo(0.6, duration: 0.3)
-        background.runAction(fadeIn)
+        let fadeIn = SKAction.fadeAlpha(to: 0.6, duration: 0.3)
+        background.run(fadeIn)
         
         // Assign actions
         closeButton.action = close
@@ -68,18 +68,18 @@ class Settings {
     }
     
     func close() {
-        let wait = SKAction.waitForDuration(0.5)
+        let wait = SKAction.wait(forDuration: 0.5)
         
-        soundButton.runAction(SKAction.removeFromParent())
-        musicButton.runAction(SKAction.removeFromParent())
-        closeButton.runAction(SKAction.removeFromParent())
+        soundButton.run(SKAction.removeFromParent())
+        musicButton.run(SKAction.removeFromParent())
+        closeButton.run(SKAction.removeFromParent())
         
-        let fadeOut = SKAction.fadeAlphaTo(0.0, duration: 0.3)
+        let fadeOut = SKAction.fadeAlpha(to: 0.0, duration: 0.3)
         let backgroundActions = SKAction.sequence([fadeOut, SKAction.removeFromParent()])
-        background.runAction(backgroundActions)
+        background.run(backgroundActions)
         
         let actions = SKAction.sequence([wait, SKAction.removeFromParent()])
-        layer.runAction(actions)
+        layer.run(actions)
     }
     
     func toggleSoundButton() {

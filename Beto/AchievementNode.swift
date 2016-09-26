@@ -34,9 +34,9 @@ class AchievementNode: SKNode {
         let details = SKNode()
         details.position = CGPoint(x: 50, y: 10)
         
-        let titleLabel = SKLabelNode(text: achievement.displayName.uppercaseString)
+        let titleLabel = SKLabelNode(text: achievement.displayName.uppercased())
         titleLabel.fontName = Constant.FontNameExtraBold
-        titleLabel.fontColor = UIColor.whiteColor()
+        titleLabel.fontColor = UIColor.white
         titleLabel.fontSize = 14
 
         // Requirements index. If at level 3, show level 2 requirement
@@ -48,7 +48,7 @@ class AchievementNode: SKNode {
         
         let requirementLabel = SKLabelNode(text: achievement.requirements[index])
         requirementLabel.fontName = Constant.FontName
-        requirementLabel.fontColor = UIColor.darkGrayColor()
+        requirementLabel.fontColor = UIColor.darkGray
         requirementLabel.fontSize = 10
         requirementLabel.position = CGPoint(x: 0, y: -15)
         
@@ -96,7 +96,7 @@ class AchievementNode: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func pointForLevel(level: Int) -> CGPoint {
+    func pointForLevel(_ level: Int) -> CGPoint {
         
         let offsetX = -145 + 32 * level
         

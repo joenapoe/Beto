@@ -12,7 +12,7 @@ extension SKLabelNode {
     func createLabelShadow() -> SKLabelNode {
         let shadow = SKLabelNode(text: text)
         shadow.fontName = fontName
-        shadow.fontColor = UIColor.darkGrayColor()
+        shadow.fontColor = UIColor.darkGray
         shadow.fontSize = fontSize
         shadow.position = CGPoint(x: position.x + 1, y: position.y - 1)
         

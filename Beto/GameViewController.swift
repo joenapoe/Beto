@@ -14,34 +14,34 @@ class GameViewController: UIViewController {
     var boardScene: BoardScene!
     
     // HUD
-    private var gameHUDView: UIImageView!
-    private var backButton: UIButton!
-    private var highscoreView: UIImageView!
-    private var coinsView: UIImageView!
-    private var highscoreLabel: UILabel!
-    private var coinsLabel: UILabel!
+    fileprivate var gameHUDView: UIImageView!
+    fileprivate var backButton: UIButton!
+    fileprivate var highscoreView: UIImageView!
+    fileprivate var coinsView: UIImageView!
+    fileprivate var highscoreLabel: UILabel!
+    fileprivate var coinsLabel: UILabel!
     
-    private var sceneView: SCNView!
-    private var panGesture = UIPanGestureRecognizer.self()
-    private var tapGesture = UITapGestureRecognizer.self()
-    private var tapRecognizer = UITapGestureRecognizer.self()
-    private var touchCount = 0.0
-    private var rerollEnabled = false
-    private var rerolling = false
+    fileprivate var sceneView: SCNView!
+    fileprivate var panGesture = UIPanGestureRecognizer.self()
+    fileprivate var tapGesture = UITapGestureRecognizer.self()
+    fileprivate var tapRecognizer = UITapGestureRecognizer.self()
+    fileprivate var touchCount = 0.0
+    fileprivate var rerollEnabled = false
+    fileprivate var rerolling = false
         
-    override func shouldAutorotate() -> Bool {
+    override var shouldAutorotate : Bool {
         return true
     }
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.AllButUpsideDown
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.allButUpsideDown
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
@@ -55,9 +55,9 @@ class GameViewController: UIViewController {
         self.view.addSubview(gameHUDView)
         
         backButton = UIButton(frame: CGRect(x: 5, y: 7, width: 60 * Constant.ScaleFactor, height: 25 * Constant.ScaleFactor))
-        backButton.setBackgroundImage(UIImage(named: "backButton"), forState: .Normal)
-        backButton.contentMode = .ScaleAspectFill
-        backButton.addTarget(self, action: #selector(buttonAction), forControlEvents: .TouchUpInside)
+        backButton.setBackgroundImage(UIImage(named: "backButton"), for: UIControlState())
+        backButton.contentMode = .scaleAspectFill
+        backButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         self.view.addSubview(backButton)
         
         let font = UIFont(name: "Futura-CondensedMedium", size: 14 * Constant.ScaleFactor)
@@ -66,8 +66,8 @@ class GameViewController: UIViewController {
         highscoreLabel.frame = CGRect(x: 110 * Constant.ScaleFactor, y: 9 * Constant.ScaleFactor, width: 80  * Constant.ScaleFactor, height: 18  * Constant.ScaleFactor)
         highscoreLabel.text = "\(GameData.highscore)"
         highscoreLabel.font = font
-        highscoreLabel.textColor = UIColor.whiteColor()
-        highscoreLabel.textAlignment = .Center
+        highscoreLabel.textColor = UIColor.white
+        highscoreLabel.textAlignment = .center
         self.view.addSubview(highscoreLabel)
         
         let coins = GameData.coins - boardScene.getWagers()
@@ -76,15 +76,15 @@ class GameViewController: UIViewController {
         coinsLabel.frame = CGRect(x: 220 * Constant.ScaleFactor, y: 9 * Constant.ScaleFactor, width: 80  * Constant.ScaleFactor, height: 18  * Constant.ScaleFactor)
         coinsLabel.text = "\(coins)"
         coinsLabel.font = font
-        coinsLabel.textColor = UIColor.whiteColor()
-        coinsLabel.textAlignment = .Center
+        coinsLabel.textColor = UIColor.white
+        coinsLabel.textAlignment = .center
         self.view.addSubview(coinsLabel)
         
         // Configure PowerUps
         if boardScene.activePowerUp != "" {
             let activePowerUpView = UIImageView(frame: CGRect(x: 10, y: gameHUDView.frame.height + 5, width: 48 * Constant.ScaleFactor, height: 48 * Constant.ScaleFactor))
             activePowerUpView.image = UIImage(named: boardScene.activePowerUp)
-            activePowerUpView.contentMode = .TopLeft
+            activePowerUpView.contentMode = .topLeft
             self.view.addSubview(activePowerUpView)
         }
         
@@ -97,13 +97,13 @@ class GameViewController: UIViewController {
         
         switch(boardScene.activePowerUp) {
         case PowerUpKey.doublePayout.rawValue:
-            diceType = .DoublePayout
+            diceType = .doublePayout
         case PowerUpKey.triplePayout.rawValue:
-            diceType = .TriplePayout
+            diceType = .triplePayout
         case PowerUpKey.doubleDice.rawValue:
-            diceType = .DoubleDice
+            diceType = .doubleDice
         default:
-            diceType = .Default
+            diceType = .default
         }
         
         gameScene = GameScene(dice: diceType)
@@ -113,9 +113,9 @@ class GameViewController: UIViewController {
         sceneView = self.view as! SCNView
         sceneView.scene = gameScene
         sceneView.delegate = gameScene
-        sceneView.playing = true
-        sceneView.backgroundColor = UIColor.clearColor()
-        sceneView.antialiasingMode = SCNAntialiasingMode.Multisampling4X
+        sceneView.isPlaying = true
+        sceneView.backgroundColor = UIColor.clear
+        sceneView.antialiasingMode = SCNAntialiasingMode.multisampling4X
         
         // Configure the background
         gameScene.background.contents = UIImage(named: GameData.theme.background)
@@ -128,20 +128,20 @@ class GameViewController: UIViewController {
         tapRecognizer.numberOfTouchesRequired = 1
     }
     
-    func handlePan(gesture:UIPanGestureRecognizer) {
-        let translationY = gesture.translationInView(self.view).y
-        let translationX = gesture.translationInView(self.view).x
+    func handlePan(_ gesture:UIPanGestureRecognizer) {
+        let translationY = gesture.translation(in: self.view).y
+        let translationX = gesture.translation(in: self.view).x
         
         if touchCount < 2 {
             if translationY < -100 {
                 for node in gameScene.getDice() {
-                    node.physicsBody!.applyTorque(SCNVector4(1,1,1,(translationY/400-1)), impulse: true) // Perfect spin
-                    node.physicsBody!.applyForce(SCNVector3(translationX/17,(-translationY/130)+9,(translationY/5)-11), impulse: true) // MIN (0,17,-31) MAX (0,21,-65)
+                    node.physicsBody!.applyTorque(SCNVector4(1,1,1,(translationY/400-1)), asImpulse: true) // Perfect spin
+                    node.physicsBody!.applyForce(SCNVector3(translationX/17,(-translationY/130)+9,(translationY/5)-11), asImpulse: true) // MIN (0,17,-31) MAX (0,21,-65)
                 }
                 
                 touchCount += 1
              
-                backButton.enabled = false
+                backButton.isEnabled = false
             }
         } else if touchCount == 2 {
             gameScene.shouldCheckMovement = true
@@ -162,7 +162,7 @@ class GameViewController: UIViewController {
         
         for node in gameScene.getDice() {
             let winningColor = gameScene.getWinningColor(node)
-            let square = boardScene.squareWithColor(winningColor)
+            let square = boardScene.squareWithColor(winningColor)!
             
             boardScene.resolvePayout(square)
             
@@ -177,21 +177,21 @@ class GameViewController: UIViewController {
                 winMsg.font = UIFont(name: "Futura-CondensedExtraBold", size: (0.2/1.29375)*Constant.ScaleFactor)
                 
                 let whiteSide = SCNMaterial()
-                whiteSide.diffuse.contents = UIColor.whiteColor()
+                whiteSide.diffuse.contents = UIColor.white
                 let blackSide = SCNMaterial()
-                blackSide.diffuse.contents = UIColor.blackColor()
+                blackSide.diffuse.contents = UIColor.black
                 
                 winMsg.materials = [whiteSide,blackSide,blackSide,blackSide,blackSide]
                 winMsg.flatness = 0.000000000001
                 winMsg.alignmentMode = kCAAlignmentCenter
                 
                 let winMsgNode = SCNNode(geometry: winMsg)
-                winMsgNode.position = SCNVector3Make(node.presentationNode.position.x-0.15 , node.presentationNode.position.y+0.25 , node.presentationNode.position.z+0.1 )
+                winMsgNode.position = SCNVector3Make(node.presentation.position.x-0.15 , node.presentation.position.y+0.25 , node.presentation.position.z+0.1 )
                 winMsgNode.eulerAngles = SCNVector3Make(Float(-M_PI/2), 0,0)
                 
-                winMsgNode.physicsBody = SCNPhysicsBody.dynamicBody()
-                winMsgNode.physicsBody?.affectedByGravity = false
-                winMsgNode.physicsBody?.applyForce(SCNVector3(0,0.03,0), impulse: true)
+                winMsgNode.physicsBody = SCNPhysicsBody.dynamic()
+                winMsgNode.physicsBody?.isAffectedByGravity = false
+                winMsgNode.physicsBody?.applyForce(SCNVector3(0,0.03,0), asImpulse: true)
                 
                 gameScene.rootNode.addChildNode(winMsgNode)
             }
@@ -228,7 +228,7 @@ class GameViewController: UIViewController {
 
             delay(2.0) {
                 self.touchCount = 0.0
-                self.gameScene = GameScene(dice: .Default)
+                self.gameScene = GameScene(dice: .default)
                 self.gameScene.resolveGameplayHandler = { [unowned self] in self.handleResolveGameplay() }
                 self.gameScene.background.contents = UIImage(named: GameData.theme.background)
              
@@ -285,16 +285,16 @@ class GameViewController: UIViewController {
         GameData.save()
         
         delay(1.0) {
-            self.dismissViewControllerAnimated(true, completion: self.boardScene.showUnlockedNodes)
+            self.dismiss(animated: true, completion: self.boardScene.showUnlockedNodes)
         }
     }
         
-    func buttonAction(sender: UIButton) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    func buttonAction(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
     }
     
-    func delay(delay: Double, closure: ()->()) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), closure)
+    func delay(_ delay: Double, closure: @escaping ()->()) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
     }
 }
 

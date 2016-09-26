@@ -9,10 +9,10 @@
 import Foundation
 
 enum ThemePrice: Int {
-    case Priceless = 99999
-    case Basic = 10
-    case Premium = 50
-    case Legendary = 100
+    case priceless = 99999
+    case basic = 0
+    case premium = 1
+    case legendary = 100
 }
 
 class Theme {
@@ -27,24 +27,24 @@ class Theme {
     init(themeName: String, unlocked: Bool) {
         name = themeName
         
-        background = "\(name.lowercaseString)Background"
-        board = "\(name.lowercaseString)Board"
+        background = "\(name.lowercased())Background"
+        board = "\(name.lowercased())Board"
         
         self.unlocked = unlocked
-        price = ThemePrice.Priceless.rawValue
+        price = ThemePrice.priceless.rawValue
     }
     
     init(themeName: String) {
         name = themeName
         
-        background = "\(name.lowercaseString)Background"
-        board = "\(name.lowercaseString)Board"
+        background = "\(name.lowercased())Background"
+        board = "\(name.lowercased())Board"
         
         unlocked = GameData.unlockedThemes.contains(themeName)
-        price = ThemePrice.Priceless.rawValue
+        price = ThemePrice.priceless.rawValue
     }
     
-    func setPrice(price: ThemePrice) {
+    func setPrice(_ price: ThemePrice) {
         self.price = price.rawValue
     }
     

@@ -31,9 +31,9 @@ class UnlockedLevel: DropdownNode {
             title += " III"
         }
         
-        let titleLabel = SKLabelNode(text: title.uppercaseString)
+        let titleLabel = SKLabelNode(text: title.uppercased())
         titleLabel.fontName = Constant.FontNameExtraBold
-        titleLabel.fontColor = UIColor.whiteColor()
+        titleLabel.fontColor = UIColor.white
         titleLabel.fontSize = 14
         titleLabel.position = CGPoint(x: 0, y: 50)
 
@@ -56,7 +56,7 @@ class UnlockedLevel: DropdownNode {
         
         let starLabel = SKLabelNode(text: "x\(rewards.starCoins)")
         starLabel.fontName = Constant.FontName
-        starLabel.fontColor = UIColor.darkGrayColor()
+        starLabel.fontColor = UIColor.darkGray
         starLabel.fontSize = 14
         starLabel.position = CGPoint(x: 30, y: -5)
         
@@ -64,12 +64,12 @@ class UnlockedLevel: DropdownNode {
         rewardsNode.addChild(starSprite)
         
         // Display rewardsDice reward
-        let diceSprite = SKSpriteNode(imageNamed: rewards.rewardsDice.rawValue.lowercaseString + "Reward")
+        let diceSprite = SKSpriteNode(imageNamed: rewards.rewardsDice.rawValue.lowercased() + "Reward")
         diceSprite.position = CGPoint(x: 30, y: 0)
     
         let diceLabel = SKLabelNode(text: "x1")
         diceLabel.fontName = Constant.FontName
-        diceLabel.fontColor = UIColor.darkGrayColor()
+        diceLabel.fontColor = UIColor.darkGray
         diceLabel.fontSize = 14
         diceLabel.position = CGPoint(x: 30, y: -5)
         

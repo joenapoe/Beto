@@ -17,7 +17,7 @@ struct Constant {
     static let Denominations = [5, 10, 50, 100, 1000, 10000, 100000, 1000000]
     static let CoinUnlockedAt = [500, 1000, 5000, 10000, 100000, 1000000, 10000000]
     static let Margin: CGFloat = 10
-    static let ScaleFactor: CGFloat = UIScreen.mainScreen().bounds.width / 320
+    static let ScaleFactor: CGFloat = UIScreen.main.bounds.width / 320
     static let FontName = "Futura Medium"
     static let FontNameCondensed = "Futura-CondensedMedium"
     static let FontNameExtraBold = "Futura-CondensedExtraBold"
@@ -26,9 +26,9 @@ struct Constant {
 }
 
 struct ScreenSize {
-    static let Size = UIScreen.mainScreen().bounds.size
-    static let Width = UIScreen.mainScreen().bounds.width
-    static let Height = UIScreen.mainScreen().bounds.height
+    static let Size = UIScreen.main.bounds.size
+    static let Width = UIScreen.main.bounds.width
+    static let Height = UIScreen.main.bounds.height
 }
 
 enum Color: String {

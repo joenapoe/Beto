@@ -9,8 +9,8 @@
 import SpriteKit
 
 class OpenRewardsNode: DropdownNode {
-    private let starCoinKey = "starCoin"
-    private var claimButton: ButtonNode
+    fileprivate let starCoinKey = "starCoin"
+    fileprivate var claimButton: ButtonNode
     
     init(diceKey: RewardsDiceKey) {
         var rewardsCount = 3
@@ -37,7 +37,7 @@ class OpenRewardsNode: DropdownNode {
         let container = SKSpriteNode()
         
         claimButton = ButtonNode(defaultButtonImage: "claimButton", activeButtonImage: "claimButton_active")
-        claimButton.hidden = true
+        claimButton.isHidden = true
         
         container.addChild(claimButton)
         
@@ -46,7 +46,7 @@ class OpenRewardsNode: DropdownNode {
         // Add actions
         claimButton.action = close
         
-        let imageName = diceKey.rawValue.lowercaseString + "Reward_large"
+        let imageName = diceKey.rawValue.lowercased() + "Reward_large"
         
         for pos in 0...rewardsCount-1 {
             let button = ButtonNode(defaultButtonImage: imageName)
@@ -78,14 +78,14 @@ class OpenRewardsNode: DropdownNode {
                 sprite.addChild(label)
                 container.addChild(sprite)
                 
-                button.removeActionForKey("wobble")
+                button.removeAction(forKey: "wobble")
                 button.action = {}
                 button.removeFromParent()
                 
                 claimedCount += 1
                 
                 if claimedCount == rewardsCount {
-                    self.claimButton.hidden = false
+                    self.claimButton.isHidden = false
                 }
             }
             
@@ -93,7 +93,7 @@ class OpenRewardsNode: DropdownNode {
         }
     }
     
-    func generateRewards(diceKey: RewardsDiceKey) -> (type: String, amount: Int) {
+    func generateRewards(_ diceKey: RewardsDiceKey) -> (type: String, amount: Int) {
         var rewardType = ""
         var amount = 0
         
@@ -195,7 +195,7 @@ class OpenRewardsNode: DropdownNode {
         return(rewardType, amount)
     }
     
-    private func pointForPosition(position: Int) -> CGPoint {
+    fileprivate func pointForPosition(_ position: Int) -> CGPoint {
         let xPosition: CGFloat = 60
         let yPosition: CGFloat = 80
 

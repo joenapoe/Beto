@@ -9,12 +9,12 @@
 import SceneKit
 
 class GameScene: SCNScene, SCNSceneRendererDelegate {
-    private let cameraNode: SCNNode
-    private let floorNode: SCNNode
-    private let diceNode: SCNNode
-    private let boundary: SCNNode
+    fileprivate let cameraNode: SCNNode
+    fileprivate let floorNode: SCNNode
+    fileprivate let diceNode: SCNNode
+    fileprivate let boundary: SCNNode
     
-    private let planeScalar: CGFloat = 2
+    fileprivate let planeScalar: CGFloat = 2
     
     var shouldCheckMovement = false
     var resolveGameplayHandler: (() -> ())?
@@ -36,7 +36,7 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
         cameraNode.position = SCNVector3(0, 3.7, 0)
         
         floorNode.geometry = SCNBox(width: 2.25, height: 0.5, length: 4, chamferRadius: 0)
-        floorNode.physicsBody = SCNPhysicsBody.staticBody()
+        floorNode.physicsBody = SCNPhysicsBody.static()
         floorNode.opacity = 0.0
         floorNode.position = SCNVector3(0, 0, 0)
 
@@ -83,15 +83,15 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
         rootNode.addChildNode(boundary)
     }
     
-    private func setBoundaryProperties(plane: SCNNode) {
+    fileprivate func setBoundaryProperties(_ plane: SCNNode) {
         let planeOpacity:CGFloat = 0.0
         
         plane.geometry = SCNBox(width: planeScalar * 2, height: planeScalar * 2, length: 0.05, chamferRadius: 0)
         plane.opacity = planeOpacity
-        plane.physicsBody = SCNPhysicsBody.staticBody()
+        plane.physicsBody = SCNPhysicsBody.static()
     }
     
-    func nearlyAtRest(node: SCNNode) -> Bool {
+    func nearlyAtRest(_ node: SCNNode) -> Bool {
         if node.physicsBody!.isResting {
             return true
         }
@@ -115,8 +115,8 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
         return diceNode.childNodes
     }
     
-    func getWinningColor(node: SCNNode) -> Color {
-        let rotation: SCNVector4 = node.presentationNode.rotation
+    func getWinningColor(_ node: SCNNode) -> Color {
+        let rotation: SCNVector4 = node.presentation.rotation
         var invRotation: SCNVector4 = rotation
         invRotation.w = -invRotation.w
         
@@ -151,29 +151,29 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
         return colors[winningIndex]
     }
     
-    func animateRollResult(node: SCNNode, didWin: Bool) {
-        node.paused = false
+    func animateRollResult(_ node: SCNNode, didWin: Bool) {
+        node.isPaused = false
         
         var actions: SCNAction = SCNAction()
         
         if !didWin {
-            actions = SCNAction.sequence([SCNAction.fadeOutWithDuration(0.5), SCNAction.removeFromParentNode()])
+            actions = SCNAction.sequence([SCNAction.fadeOut(duration: 0.5), SCNAction.removeFromParentNode()])
         }
         
         node.runAction(actions)
         
     }
     
-    func renderer(renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: NSTimeInterval) {
+    func renderer(_ renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: TimeInterval) {
         if shouldCheckMovement {
             shouldCheckMovement = false
             
             for node in getDice() {
-                if nearlyAtRest(node) && !node.paused {
-                    node.paused = true
+                if nearlyAtRest(node) && !node.isPaused {
+                    node.isPaused = true
                 }
                 
-                if !node.paused {
+                if !node.isPaused {
                     shouldCheckMovement = true
                 }
             }

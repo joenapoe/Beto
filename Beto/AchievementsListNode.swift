@@ -9,11 +9,11 @@
 import SpriteKit
 
 class AchievementsListNode: DropdownNode {
-    private let container: SKSpriteNode
-    private var achievementNodes: [AchievementNode]
+    fileprivate let container: SKSpriteNode
+    fileprivate var achievementNodes: [AchievementNode]
 
-    private var currentPage = 0
-    private let perPageCount = 5
+    fileprivate var currentPage = 0
+    fileprivate let perPageCount = 5
     
     init() {
         container = SKSpriteNode(imageNamed: "achievementsListBackground")
@@ -21,7 +21,7 @@ class AchievementsListNode: DropdownNode {
         container.position = CGPoint(x: 0, y: ScreenSize.Height)
         
         // Custom scale for iPhone 4 (Screen size: 320 x 480)
-        if UIScreen.mainScreen().bounds.height == 480 {
+        if UIScreen.main.bounds.height == 480 {
             container.setScale(0.93)
         }
         
@@ -51,7 +51,7 @@ class AchievementsListNode: DropdownNode {
         container.addChild(nextButton)
     }
     
-    func createPage(pageNumber: Int) {
+    func createPage(_ pageNumber: Int) {
         for node in achievementNodes {
             node.removeFromParent()
         }
@@ -94,7 +94,7 @@ class AchievementsListNode: DropdownNode {
         }
     }
     
-    func pointForIndex(index: Int) -> CGPoint {
+    func pointForIndex(_ index: Int) -> CGPoint {
         
         let offsetY = 121 - 60 * index
         

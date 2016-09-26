@@ -35,8 +35,8 @@ class RewardsDiceVault: DropdownNode {
         infoButton.action = {
             infoOverlay.alpha = 0.0
             
-            let fadeIn = SKAction.fadeAlphaTo(1.0, duration: 0.2)
-            infoOverlay.runAction(fadeIn)
+            let fadeIn = SKAction.fadeAlpha(to: 1.0, duration: 0.2)
+            infoOverlay.run(fadeIn)
             
             vault.addChild(infoOverlay)
         }
@@ -58,11 +58,11 @@ class RewardsDiceVault: DropdownNode {
         }
     }
     
-    func handleOpenRewards(dice: RewardsDice) {
+    func handleOpenRewards(_ dice: RewardsDice) {
         openRewardsDiceHandler!(dice)
     }
     
-    func pointForPosition(position: Int) -> CGPoint {
+    func pointForPosition(_ position: Int) -> CGPoint {
         var column = 0
         var row = 0
         
