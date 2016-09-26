@@ -101,4 +101,12 @@ class Settings {
             musicButton.changeTexture("musicButton")
         }
     }
+    
+    func presentMenuScene() {
+        let transition = SKTransition.flipVertical(withDuration: 0.4)
+        let menuScene = MenuScene(size: CGSize(width: ScreenSize.Width, height: ScreenSize.Height))
+        menuScene.scaleMode = .aspectFill
+        let skView = SKView()
+        skView.presentScene(menuScene, transition: transition)
+    }
 }
