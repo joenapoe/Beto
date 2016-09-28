@@ -13,7 +13,7 @@ class AchievementNode: SKNode {
     init(achievement: Achievement) {
         super.init()
         
-        let container = SKSpriteNode(imageNamed: "achievementBackground")
+        let container = SKSpriteNode(imageNamed: "dropNodeCellBackground")
         container.size = CGSize(width: 276, height: 60)
                 
         // Add level sprites

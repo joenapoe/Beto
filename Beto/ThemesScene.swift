@@ -116,6 +116,7 @@ class ThemesScene: SKScene {
         // Info
         let infoOverlay = ButtonNode(defaultButtonImage: "overlay")
         infoOverlay.action = { infoOverlay.removeFromParent() }
+        infoOverlay.setScale(Constant.ScaleFactor)
         
         let infoSprite = SKSpriteNode(imageNamed: "starCoinsInfo")
         

@@ -104,7 +104,7 @@ class OpenRewardsNode: DropdownNode {
         } else if rand <= 40 {
             rewardType = PowerUpKey.rewardBoost.rawValue
         } else if rand <= 60 {
-            rewardType = PowerUpKey.doubleDice.rawValue
+            rewardType = PowerUpKey.extraDice.rawValue
         } else if rand <= 80 {
             rewardType = PowerUpKey.doublePayout.rawValue
         } else if rand <= 90{

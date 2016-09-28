@@ -77,12 +77,12 @@ class MenuScene: SKScene {
     func showTutorial() {
         let infoOverlay = ButtonNode(defaultButtonImage: "overlay")
         infoOverlay.action = { infoOverlay.removeFromParent() }
+        infoOverlay.setScale(Constant.ScaleFactor)
         
         let infoSprite = SKSpriteNode(imageNamed: "howToPlayInfo")
         infoSprite.position = CGPoint(x: 0, y: 50)
         
         infoOverlay.addChild(infoSprite)
-        
         infoOverlay.alpha = 0.0
         
         let fadeIn = SKAction.fadeAlpha(to: 1.0, duration: 0.2)

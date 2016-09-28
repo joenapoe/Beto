@@ -23,11 +23,11 @@ class Square: ButtonNode {
         self.selected = false
         self.defaultButtonImage = color.rawValue + "Square"
         
-        
         label = SKLabelNode(fontNamed: Constant.FontNameCondensed)
-        label.isHidden = true
+        label.fontSize = 28
         label.horizontalAlignmentMode = .center
         label.verticalAlignmentMode = .center
+        label.isHidden = true
         
         let activeButtonImage = defaultButtonImage + "_active"
         
@@ -48,29 +48,6 @@ class Square: ButtonNode {
     }
     
     func updateLabel() {
-        let formattedWager = formatStringFromNumber(wager)
-
-        if wager >= 1000000 && formattedWager.count > 5 {
-            label.fontSize = 28
-        } else {
-            label.fontSize = 32
-        }
-        
-        label.text = formattedWager
-    }
-    
-    fileprivate func formatStringFromNumber(_ number: Int) -> String {
-        if number >= 1000000 {
-            let formatter = NumberFormatter()
-            formatter.minimumFractionDigits = 0
-            formatter.maximumFractionDigits = 2
-            
-            let newNumber: Double = floor(Double(number) / 10000) / 100.0
-            let formattedNumber = formatter.string(from: NSNumber(value: newNumber))
-            
-            return "\(formattedNumber)M"
-        } else {
-            return "\(number)"
-        }
+        label.text = wager.formatStringFromNumberShortenMillion()
     }
 }

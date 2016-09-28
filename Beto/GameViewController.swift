@@ -28,6 +28,7 @@ class GameViewController: UIViewController {
     fileprivate var touchCount = 0.0
     fileprivate var rerollEnabled = false
     fileprivate var rerolling = false
+    fileprivate var coins = 0
         
     override var shouldAutorotate : Bool {
         return true
@@ -48,7 +49,6 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         // Configure GameSceneHUD
         gameHUDView = UIImageView(frame: CGRect(x: 0, y: 0, width: 320 * Constant.ScaleFactor, height: 38 * Constant.ScaleFactor))
         gameHUDView.image = UIImage(named: "gameSceneHUD")
@@ -64,17 +64,18 @@ class GameViewController: UIViewController {
         
         highscoreLabel = UILabel()
         highscoreLabel.frame = CGRect(x: 110 * Constant.ScaleFactor, y: 9 * Constant.ScaleFactor, width: 80  * Constant.ScaleFactor, height: 18  * Constant.ScaleFactor)
-        highscoreLabel.text = "\(GameData.highscore)"
+        highscoreLabel.text = "\(GameData.highscore.formatStringFromNumberShortenMillion())"
         highscoreLabel.font = font
         highscoreLabel.textColor = UIColor.white
         highscoreLabel.textAlignment = .center
         self.view.addSubview(highscoreLabel)
         
-        let coins = GameData.coins - boardScene.getWagers()
+        
+        coins = GameData.coins - boardScene.getWagers()
         
         coinsLabel = UILabel()
         coinsLabel.frame = CGRect(x: 220 * Constant.ScaleFactor, y: 9 * Constant.ScaleFactor, width: 80  * Constant.ScaleFactor, height: 18  * Constant.ScaleFactor)
-        coinsLabel.text = "\(coins)"
+        coinsLabel.text = "\(coins.formatStringFromNumberShortenMillion())"
         coinsLabel.font = font
         coinsLabel.textColor = UIColor.white
         coinsLabel.textAlignment = .center
@@ -100,8 +101,8 @@ class GameViewController: UIViewController {
             diceType = .doublePayout
         case PowerUpKey.triplePayout.rawValue:
             diceType = .triplePayout
-        case PowerUpKey.doubleDice.rawValue:
-            diceType = .doubleDice
+        case PowerUpKey.extraDice.rawValue:
+            diceType = .extraDice
         default:
             diceType = .default
         }
@@ -194,6 +195,17 @@ class GameViewController: UIViewController {
                 winMsgNode.physicsBody?.applyForce(SCNVector3(0,0.03,0), asImpulse: true)
                 
                 gameScene.rootNode.addChildNode(winMsgNode)
+                
+                // Update HUD
+                coins += boardScene.calculateWinnings(square)
+                
+                if !winningColors.contains(square.color) {
+                    coins += square.wager
+                }
+                
+                delay(0.4) {
+                    self.coinsLabel.text = self.coins.formatStringFromNumberShortenMillion()
+                }
             }
             
             if didWin && !winningColors.contains(winningColor) {
@@ -248,8 +260,8 @@ class GameViewController: UIViewController {
             GameData.incrementAchievement(.Lifeline)
         case PowerUpKey.rewardBoost.rawValue:
             GameData.incrementAchievement(.RewardBoost)
-        case PowerUpKey.doubleDice.rawValue:
-            GameData.incrementAchievement(.DoubleDice)
+        case PowerUpKey.extraDice.rawValue:
+            GameData.incrementAchievement(.ExtraDice)
         case PowerUpKey.doublePayout.rawValue:
             GameData.incrementAchievement(.DoublePayout)
         case PowerUpKey.triplePayout.rawValue:
