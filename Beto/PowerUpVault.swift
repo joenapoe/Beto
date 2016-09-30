@@ -11,12 +11,12 @@ import SpriteKit
 enum PowerUpKey: String {
     case lifeline
     case rewardBoost
-    case doubleDice
+    case reroll
+    case extraDice
     case doublePayout
     case triplePayout
-    case reroll
     
-    static let allValues = [lifeline, rewardBoost, doubleDice, doublePayout, triplePayout, reroll]
+    static let allValues = [lifeline, rewardBoost, reroll, extraDice, doublePayout, triplePayout]
 }
 
 class PowerUpVault: DropdownNode {

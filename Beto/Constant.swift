@@ -8,7 +8,6 @@
 
 import SpriteKit
 
-// Delete: Revisit Singleton Later
 let GameData = GameDataManager()
 let Audio = AudioManager()
 let Achievements = AchievementsManager()

@@ -23,13 +23,13 @@
 		<integer>0</integer>
 		<key>rewardBoost</key>
 		<integer>0</integer>
-		<key>doubleDice</key>
+		<key>reroll</key>
+		<integer>0</integer>
+		<key>extraDice</key>
 		<integer>0</integer>
 		<key>doublePayout</key>
 		<integer>0</integer>
 		<key>triplePayout</key>
-		<integer>0</integer>
-		<key>reroll</key>
 		<integer>0</integer>
 	</dict>
 	<key>achievementTracker</key>

@@ -16,7 +16,7 @@ class BoardScene: SKScene {
     fileprivate let menuButton: ButtonNode
     fileprivate let highscoreButton: ButtonNode
     fileprivate let highscoreLabel: SKLabelNode
-    fileprivate let betoCoinsButton: ButtonNode
+    fileprivate let coinsButton: ButtonNode
     fileprivate let coinsLabel: SKLabelNode
     
     // Board
@@ -67,9 +67,9 @@ class BoardScene: SKScene {
         menuButton.size = CGSize(width: 60, height: 25)
         menuButton.position = CGPoint(x: (-gameHUD.size.width + menuButton.size.width + Constant.Margin) / 2 , y: 0)
         
-        betoCoinsButton = ButtonNode(defaultButtonImage: "betoCoinsButton")
-        betoCoinsButton.size = CGSize(width: 100, height: 25)
-        betoCoinsButton.position = CGPoint(x: (gameHUD.size.width - betoCoinsButton.size.width) / 2 - Constant.Margin, y: 0)
+        coinsButton = ButtonNode(defaultButtonImage: "coinsButton")
+        coinsButton.size = CGSize(width: 100, height: 25)
+        coinsButton.position = CGPoint(x: (gameHUD.size.width - coinsButton.size.width) / 2 - Constant.Margin, y: 0)
         
         coinsLabel = SKLabelNode()
         coinsLabel.fontName = Constant.FontNameCondensed
@@ -79,7 +79,7 @@ class BoardScene: SKScene {
         
         highscoreButton = ButtonNode(defaultButtonImage: "highscoreButton")
         highscoreButton.size = CGSize(width: 100, height: 25)
-        highscoreButton.position = CGPoint(x: betoCoinsButton.position.x - (highscoreButton.size.width + Constant.Margin), y: 0)
+        highscoreButton.position = CGPoint(x: coinsButton.position.x - (highscoreButton.size.width + Constant.Margin), y: 0)
         
         highscoreLabel = SKLabelNode()
         highscoreLabel.fontName = Constant.FontNameCondensed
@@ -139,7 +139,7 @@ class BoardScene: SKScene {
         
         // Set button actions
         menuButton.action = presentMenuScene
-        betoCoinsButton.action = displayShop
+        coinsButton.action = displayShop
         highscoreButton.action = displayAchievements
         
         playButton.action = playButtonPressed
@@ -153,13 +153,13 @@ class BoardScene: SKScene {
         updateHighscoreLabel(GameData.highscore)
 
         // Add labels to corresponding nodes
-        betoCoinsButton.addChild(coinsLabel)
+        coinsButton.addChild(coinsLabel)
         highscoreButton.addChild(highscoreLabel)
         
         // Add nodes to gameHUD
         gameHUD.addChild(menuButton)
         gameHUD.addChild(highscoreButton)
-        gameHUD.addChild(betoCoinsButton)
+        gameHUD.addChild(coinsButton)
         
         // Add nodes to board
         board.addChild(playButton)
@@ -196,26 +196,11 @@ class BoardScene: SKScene {
     
     /***** GameHUD Functions *****/
     func updateCoinsLabel(_ coins: Int) {
-        coinsLabel.text = formatStringFromNumber(coins)
+        coinsLabel.text = coins.formatStringFromNumberShortenMillion()
     }
     
     func updateHighscoreLabel(_ highscore: Int) {
-        highscoreLabel.text = formatStringFromNumber(highscore)
-    }
-    
-    fileprivate func formatStringFromNumber(_ number: Int) -> String {
-        if number >= 1000000 {
-            let formatter = NumberFormatter()
-            formatter.minimumFractionDigits = 0
-            formatter.maximumFractionDigits = 2
-            
-            let newNumber: Double = floor(Double(number) / 10000) / 100.0
-            let formattedNumber = formatter.string(from: NSNumber(value: newNumber))
-            
-            return "\(formattedNumber)M"
-        } else {
-            return "\(number)"
-        }
+        highscoreLabel.text = highscore.formatStringFromNumberShortenMillion()
     }
     
     fileprivate func displayAchievements() {
@@ -225,68 +210,15 @@ class BoardScene: SKScene {
         addChild(layer)
     }
     
-    // DELETE: Might have to drop this feature
-    fileprivate func displayShop() {        
-        let closeButton = ButtonNode(defaultButtonImage: "closeButton")
-        closeButton.size = CGSize(width: 44, height: 45)
-        closeButton.position = CGPoint(x: 140, y: 190)
+    fileprivate func displayShop() {
+        let shop = BetoShop()
+        addChild(shop.createLayer())
         
-        let container = SKSpriteNode(imageNamed: "shopBackground")
-        container.size = CGSize(width: 304, height: 412)
-        container.position = CGPoint(x: 0, y: ScreenSize.Height)
-        
-        // Custom scale for iPhone 4 (Screen size: 320 x 480)
-        if UIScreen.main.bounds.height == 480 {
-            container.setScale(0.93)
-        }
-        
-        let coinsBackground = SKSpriteNode(imageNamed: "coinsBackground")
-        coinsBackground.size = CGSize(width: 276, height: 55)
-        coinsBackground.position = CGPoint(x: 0, y: 124)
-        
-        let numberFormatter = NumberFormatter()
-        numberFormatter.groupingSeparator = " "
-        numberFormatter.numberStyle = NumberFormatter.Style.decimal
-        let coins = numberFormatter.string(from: NSNumber(value: GameData.coins))
-        
-        let coinsLabel = SKLabelNode(text: coins)
-        coinsLabel.fontName = Constant.FontNameCondensed
-        coinsLabel.fontSize = 28
-        coinsLabel.horizontalAlignmentMode = .center
-        coinsLabel.verticalAlignmentMode = .center
-        
-        coinsBackground.addChild(coinsLabel)
-        
-        // DELETE: Add buy rewardsDice action, need to update labels after buying
-        
-        let buyBasic = ButtonNode(defaultButtonImage: "buyPlaceholder")
-        buyBasic.size = CGSize(width: 137, height: 124)
-        buyBasic.position = CGPoint(x: -69, y: 33)
-        
-        let buyDeluxe = ButtonNode(defaultButtonImage: "buyPlaceholder")
-        buyDeluxe.size = CGSize(width: 137, height: 124)
-        buyDeluxe.position = CGPoint(x: 69, y: 33)
-        
-        let buyPremium = ButtonNode(defaultButtonImage: "buyPlaceholder")
-        buyPremium.size = CGSize(width: 137, height: 124)
-        buyPremium.position = CGPoint(x: -69, y: -92)
-        
-        let buyPremiumPlus = ButtonNode(defaultButtonImage: "buyPlaceholder")
-        buyPremiumPlus.size = CGSize(width: 137, height: 124)
-        buyPremiumPlus.position = CGPoint(x: 69, y: -92)
-        
-        // Add nodes
-        container.addChild(closeButton)
-        container.addChild(coinsBackground)
-        container.addChild(buyBasic)
-        container.addChild(buyDeluxe)
-        container.addChild(buyPremium)
-        container.addChild(buyPremiumPlus)
-        
-        let shopNode = DropdownNode(container: container)
-        closeButton.action = shopNode.close
-        
-        addChild(shopNode.createLayer())
+        NotificationCenter.default.addObserver(self, selector: #selector(updateHUDAfterBuy), name: NSNotification.Name(rawValue: "updateHUDAfterBuy"), object: nil)
+    }
+    
+    func updateHUDAfterBuy() {
+        coinsLabel.text = GameData.coins.formatStringFromNumberShortenMillion()
     }
     
     /***** Board Functions *****/
@@ -453,7 +385,6 @@ class BoardScene: SKScene {
         
         let button = ButtonNode(defaultButtonImage: powerUp.name!)
         button.action = deactivatePowerUpButtonPressed
-        // DELETE: Optimize size/position
         button.position = CGPoint(x: (-board.size.width + button.size.width) / 2,
                                   y: gameHUD.position.y - (gameHUD.size.height + diceVaultButton.size.height + Constant.Margin) / 2)
 

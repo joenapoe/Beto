@@ -12,7 +12,7 @@ enum DiceType {
     case `default`
     case doublePayout
     case triplePayout
-    case doubleDice
+    case extraDice
 }
 
 class DiceMaker {
@@ -38,9 +38,8 @@ class DiceMaker {
         switch type {
         case .default:
             break
-        case .doubleDice:
-            count = 6
-            size = 0.28
+        case .extraDice:
+            count = 4
         case .doublePayout:
             yellowImage = "doublePayYellowFace"
             cyanImage = "doublePayCyanFace"
@@ -80,19 +79,18 @@ class DiceMaker {
     }
     
     func addDiceSetTo(_ diceNode: SCNNode) {
-        for num in 1...count {
+        for num in 0...count-1 {
             // Initialize position
-            let xoffset = CGFloat(num % 3)
-            let xposition: CGFloat = -0.2 + (0.2 * xoffset)
-            
-            var yposition: CGFloat = 0.15
-            
-            if num > 3 {
-                yposition = 1.15
+            var xposition: CGFloat = -0.2 + (0.2 * CGFloat(num))
+            let yposition: CGFloat = 0.15
+
+            // If ExtraDice activated
+            if count > 3 {
+                xposition = -0.3 + (0.2 * CGFloat(num))
             }
-
+            
             let position = SCNVector3(xposition, yposition, 1.15)
-
+            
             let dice = Dice()
             dice.position = position
             dice.geometry = SCNBox(width: size, height: size, length: size, chamferRadius: size/6)

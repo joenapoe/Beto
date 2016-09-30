@@ -49,8 +49,10 @@
 		B9C0672D1CF0423D0021AE6E /* AchievementsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C0672C1CF0423D0021AE6E /* AchievementsManager.swift */; };
 		B9C7E2C41C8B88A300879014 /* CoinVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C7E2C31C8B88A300879014 /* CoinVault.swift */; };
 		B9CDB80F1CB8593C00BC8A57 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CDB80E1CB8593C00BC8A57 /* Settings.swift */; };
+		B9E6D21D1D9C7D5A00B010D1 /* BuyDiceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E6D21C1D9C7D5A00B010D1 /* BuyDiceNode.swift */; };
 		B9F1D2701C7571BC00E242F7 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9F1D26F1C7571BC00E242F7 /* MenuScene.swift */; };
 		B9F1D27A1C75AE6700E242F7 /* ButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9F1D2791C75AE6700E242F7 /* ButtonNode.swift */; };
+		B9FED4941D9BC7ED000AE061 /* BetoShop.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FED4931D9BC7ED000AE061 /* BetoShop.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,8 +121,10 @@
 		B9C0672C1CF0423D0021AE6E /* AchievementsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AchievementsManager.swift; sourceTree = "<group>"; };
 		B9C7E2C31C8B88A300879014 /* CoinVault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoinVault.swift; sourceTree = "<group>"; };
 		B9CDB80E1CB8593C00BC8A57 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		B9E6D21C1D9C7D5A00B010D1 /* BuyDiceNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyDiceNode.swift; sourceTree = "<group>"; };
 		B9F1D26F1C7571BC00E242F7 /* MenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 		B9F1D2791C75AE6700E242F7 /* ButtonNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonNode.swift; sourceTree = "<group>"; };
+		B9FED4931D9BC7ED000AE061 /* BetoShop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BetoShop.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -281,6 +285,8 @@
 				B9C067281CF009170021AE6E /* AchievementNode.swift */,
 				B9C0672A1CF0094F0021AE6E /* AchievementsListNode.swift */,
 				B95511D91CF8301E005DB77E /* UnlockedLevel.swift */,
+				B9FED4931D9BC7ED000AE061 /* BetoShop.swift */,
+				B9E6D21C1D9C7D5A00B010D1 /* BuyDiceNode.swift */,
 			);
 			name = DropdownNodes;
 			sourceTree = "<group>";
@@ -440,6 +446,7 @@
 				B969C0FC1C7E8B2A00B24CDB /* Constant.swift in Sources */,
 				B94F774F1C63FB7F00B3A78C /* GameScene.swift in Sources */,
 				B950AF9C1C8A50EE00A74054 /* Coin.swift in Sources */,
+				B9FED4941D9BC7ED000AE061 /* BetoShop.swift in Sources */,
 				B988697B1CB99CFE0017577D /* BoardScene.swift in Sources */,
 				B94F77511C63FB7F00B3A78C /* GameViewController.swift in Sources */,
 				B972CFFB1D124A9F0030119D /* DropdownNode.swift in Sources */,
@@ -453,6 +460,7 @@
 				B9C0672D1CF0423D0021AE6E /* AchievementsManager.swift in Sources */,
 				B96F937A1D5DAB2E00617A0B /* PowerUp.swift in Sources */,
 				00543AFB1C92ACCC006C3B52 /* DiceMaker.swift in Sources */,
+				B9E6D21D1D9C7D5A00B010D1 /* BuyDiceNode.swift in Sources */,
 				B9F1D27A1C75AE6700E242F7 /* ButtonNode.swift in Sources */,
 				B9C7E2C41C8B88A300879014 /* CoinVault.swift in Sources */,
 				B92354C51D6841AA006F653E /* RewardsDice.swift in Sources */,

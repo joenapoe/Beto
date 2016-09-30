@@ -22,10 +22,10 @@ enum AchievementName: String {
     case PurpleWin
     case Lifeline
     case RewardBoost
-    case DoubleDice
+    case Reroll
+    case ExtraDice
     case DoublePayout
     case TriplePayout
-    case Reroll
     case Bronze
     case Silver
     case Gold
@@ -258,16 +258,28 @@ class AchievementsManager {
         list.append(rewardBoost)
         
         
-        /********** AchievementName: DoubleDice ***********/
-        let doubleDice = Achievement(name: AchievementName.DoubleDice.rawValue,
-                                     displayName: "Double The Fun",
+        /********** AchievementName: Reroll ***********/
+        let reroll = Achievement(name: AchievementName.Reroll.rawValue,
+                                 displayName: "Baby One More Time",
+                                 requirementValues: powerUpValues,
+                                 requirements: powerUpRequirements(AchievementName.Reroll.rawValue, values: powerUpValues),
+                                 rewards: [Reward(starCoins: 1, rewardsDice: .Gold),
+                                           Reward(starCoins: 3, rewardsDice: .Platinum),
+                                           Reward(starCoins: 5, rewardsDice: .Diamond)])
+        
+        list.append(reroll)
+        
+        
+        /********** AchievementName: ExtraDice ***********/
+        let extraDice = Achievement(name: AchievementName.ExtraDice.rawValue,
+                                     displayName: "Plus One",
                                      requirementValues: powerUpValues,
-                                     requirements: powerUpRequirements(AchievementName.DoubleDice.rawValue, values: powerUpValues),
+                                     requirements: powerUpRequirements(AchievementName.ExtraDice.rawValue, values: powerUpValues),
                                      rewards: [Reward(starCoins: 1, rewardsDice: .Gold),
                                         Reward(starCoins: 3, rewardsDice: .Platinum),
                                         Reward(starCoins: 5, rewardsDice: .Diamond)])
 
-        list.append(doubleDice)
+        list.append(extraDice)
         
         
         /********** AchievementName: DoublePayout ***********/
@@ -293,17 +305,6 @@ class AchievementsManager {
 
         list.append(triplePayout)
         
-        
-        /********** AchievementName: Reroll ***********/
-        let reroll = Achievement(name: AchievementName.Reroll.rawValue,
-                                   displayName: "Baby One More Time",
-                                   requirementValues: powerUpValues,
-                                   requirements: powerUpRequirements(AchievementName.Reroll.rawValue, values: powerUpValues),
-                                   rewards: [Reward(starCoins: 1, rewardsDice: .Gold),
-                                    Reward(starCoins: 3, rewardsDice: .Platinum),
-                                    Reward(starCoins: 5, rewardsDice: .Diamond)])
-
-        list.append(reroll)
         
         /********** Rewards Dice Achievements ***********/
         let rewardsDiceValues = [10, 50, 100]

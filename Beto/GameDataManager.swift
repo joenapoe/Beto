@@ -159,8 +159,6 @@ class GameDataManager {
         
         if (coins + amount) > max {
             coins = max
-            
-            // DELETE: Add ultimate reward when player reach max
         } else {
             coins += amount
         }
@@ -220,14 +218,12 @@ class GameDataManager {
         Achievements.update(name)        
     }
     
-    // DELETE: Test again
     func updateHighestWager(_ wager: Int) {
         let key = AchievementName.HighestWager.rawValue
         
         if let value = achievementTracker[key] {
             if wager > value {
                 achievementTracker[key] = wager
-            
                 Achievements.update(.HighestWager)
             }
         } else {
