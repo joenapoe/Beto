@@ -23,8 +23,6 @@ class GameViewController: UIViewController {
     
     fileprivate var sceneView: SCNView!
     fileprivate var panGesture = UIPanGestureRecognizer.self()
-    fileprivate var tapGesture = UITapGestureRecognizer.self()
-    fileprivate var tapRecognizer = UITapGestureRecognizer.self()
     fileprivate var touchCount = 0.0
     fileprivate var rerollEnabled = false
     fileprivate var rerolling = false
@@ -107,7 +105,7 @@ class GameViewController: UIViewController {
             diceType = .default
         }
         
-        gameScene = GameScene(dice: diceType)
+        gameScene = GameScene(dice: diceType, selectedColors: boardScene.selectedColors)
         gameScene.resolveGameplayHandler = { [unowned self] in self.handleResolveGameplay() }
         
         // Configure the view
@@ -119,14 +117,14 @@ class GameViewController: UIViewController {
         sceneView.antialiasingMode = SCNAntialiasingMode.multisampling4X
         
         // Configure the background
-        gameScene.background.contents = UIImage(named: GameData.theme.background)
+        let themes = ThemeManager()
+        let theme = themes.getTheme(GameData.currentThemeName)
+        
+        gameScene.background.contents = UIImage(named: theme.background)
         
         // Configure the gestures
         panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         view.addGestureRecognizer(panGesture)
-        
-        tapRecognizer.numberOfTapsRequired = 1
-        tapRecognizer.numberOfTouchesRequired = 1
     }
     
     func handlePan(_ gesture:UIPanGestureRecognizer) {
@@ -145,11 +143,15 @@ class GameViewController: UIViewController {
                 backButton.isEnabled = false
             }
         } else if touchCount == 2 {
+            view.isUserInteractionEnabled = false
+
+            gameScene.playRollDiceSoundEffect()
             gameScene.shouldCheckMovement = true
         }
     }
     
     func handleResolveGameplay() {
+        
         // Only update coins and gamesPlayed during the first roll.
         if !rerolling {
             GameData.subtractCoins(boardScene.getWagers())
@@ -240,12 +242,18 @@ class GameViewController: UIViewController {
 
             delay(2.0) {
                 self.touchCount = 0.0
-                self.gameScene = GameScene(dice: .default)
+                self.gameScene = GameScene(dice: .default, selectedColors: self.boardScene.selectedColors)
                 self.gameScene.resolveGameplayHandler = { [unowned self] in self.handleResolveGameplay() }
-                self.gameScene.background.contents = UIImage(named: GameData.theme.background)
+                
+                let themes = ThemeManager()
+                let theme = themes.getTheme(GameData.currentThemeName)
+                
+                self.gameScene.background.contents = UIImage(named: theme.background)
              
                 self.sceneView.scene = self.gameScene
                 self.sceneView.delegate = self.gameScene
+                
+                self.view.isUserInteractionEnabled = true
             }
 
             return
@@ -279,7 +287,7 @@ class GameViewController: UIViewController {
             GameData.incrementAchievement(.MoneyGrabber)
 
             // Calculate rewardChance
-            let num = 4 - boardScene.squaresSelectedCount
+            let num = 4 - boardScene.selectedColors.count
             
             GameData.increaseRewardChance(num)
             boardScene.resolveRandomReward()

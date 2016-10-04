@@ -27,33 +27,47 @@ class DiceMaker {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(type: DiceType) {
-        var yellowImage = "defaultYellowFace"
-        var cyanImage = "defaultCyanFace"
-        var purpleImage = "defaultPurpleFace"
-        var blueImage = "defaultBlueFace"
-        var redImage = "defaultRedFace"
-        var greenImage = "defaultGreenFace"
+    init(type: DiceType, selectedColors: [Color]) {
+        var yellowImage = "blankYellowFace"
+        var cyanImage = "blankCyanFace"
+        var purpleImage = "blankPurpleFace"
+        var blueImage = "blankBlueFace"
+        var redImage = "blankRedFace"
+        var greenImage = "blankGreenFace"
+
+        // Set diceFace image 
+        var imgName = "default"
+    
+        let themeManager = ThemeManager()
+        let theme = themeManager.getTheme(GameData.currentThemeName)
+
+        if theme.tier == .ultimate {
+            imgName = theme.name.lowercased()
+        } else if type == .doublePayout {
+            imgName = "doublePay"
+        } else if type == .triplePayout {
+            imgName = "triplePay"
+        }
         
-        switch type {
-        case .default:
-            break
-        case .extraDice:
+        if type == .extraDice {
             count = 4
-        case .doublePayout:
-            yellowImage = "doublePayYellowFace"
-            cyanImage = "doublePayCyanFace"
-            purpleImage = "doublePayPurpleFace"
-            blueImage = "doublePayBlueFace"
-            redImage = "doublePayRedFace"
-            greenImage = "doublePayGreenFace"
-        case .triplePayout:
-            yellowImage = "triplePayYellowFace"
-            cyanImage = "triplePayCyanFace"
-            purpleImage = "triplePayPurpleFace"
-            blueImage = "triplePayBlueFace"
-            redImage = "triplePayRedFace"
-            greenImage = "triplePayGreenFace"
+        }
+        
+        for color in selectedColors {
+            switch color {
+            case .Yellow:
+                yellowImage = imgName + "YellowFace"
+            case .Cyan:
+                cyanImage = imgName + "CyanFace"
+            case .Purple:
+                purpleImage = imgName + "PurpleFace"
+            case .Blue:
+                blueImage = imgName + "BlueFace"
+            case .Red:
+                redImage = imgName + "RedFace"
+            case .Green:
+                greenImage = imgName + "GreenFace"
+            }
         }
         
         let yellowSide = SCNMaterial()
@@ -73,9 +87,9 @@ class DiceMaker {
         
         let greenSide = SCNMaterial()
         greenSide.diffuse.contents = UIImage(named: greenImage)
-
+        
         diceMaterials = [yellowSide, cyanSide, purpleSide, blueSide, redSide, greenSide]
-    
+        
     }
     
     func addDiceSetTo(_ diceNode: SCNNode) {

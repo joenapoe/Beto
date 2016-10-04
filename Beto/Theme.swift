@@ -8,49 +8,38 @@
 
 import Foundation
 
-enum ThemePrice: Int {
-    case priceless = 99999
-    case basic = 0
-    case premium = 1
-    case legendary = 100
+enum PriceTier: Int {
+    case free = 0
+    case basic = 25
+    case premium = 50
+    case ultimate = 100
 }
 
 class Theme {
     let name: String
     let background: String
     let board: String
-
+    
     var unlocked: Bool
-    var price: Int
- 
-    // Initializer for the current theme
-    init(themeName: String, unlocked: Bool) {
+    var tier: PriceTier
+     
+    init(themeName: String, tier: PriceTier) {
         name = themeName
-        
         background = "\(name.lowercased())Background"
         board = "\(name.lowercased())Board"
         
-        self.unlocked = unlocked
-        price = ThemePrice.priceless.rawValue
-    }
-    
-    init(themeName: String) {
-        name = themeName
+        if tier == .free || GameData.unlockedThemes.contains(themeName) {
+            unlocked = true
+        } else {
+            unlocked = false
+        }
         
-        background = "\(name.lowercased())Background"
-        board = "\(name.lowercased())Board"
-        
-        unlocked = GameData.unlockedThemes.contains(themeName)
-        price = ThemePrice.priceless.rawValue
-    }
-    
-    func setPrice(_ price: ThemePrice) {
-        self.price = price.rawValue
+        self.tier = tier
     }
     
     func purchase() {
         unlocked = true
-        GameData.subtractStarCoins(price)
+        GameData.subtractStarCoins(tier.rawValue)
         GameData.addPurchasedTheme(name)
         GameData.save()
     }

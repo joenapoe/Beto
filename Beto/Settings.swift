@@ -13,6 +13,7 @@ class Settings {
     fileprivate let background: SKSpriteNode
     fileprivate let soundButton: ButtonNode
     fileprivate let musicButton: ButtonNode
+    fileprivate let creditsButton: ButtonNode
     fileprivate let closeButton: ButtonNode
     
     init() {
@@ -41,6 +42,9 @@ class Settings {
         
         musicButton = ButtonNode(defaultButtonImage: musicImage)
         musicButton.size = CGSize(width: 44, height: 45)
+        
+        creditsButton = ButtonNode(defaultButtonImage: "creditsButton")
+        creditsButton.size = CGSize(width: 44, height: 45)
     }
     
     func createLayer() -> SKNode {
@@ -52,17 +56,20 @@ class Settings {
         closeButton.action = close
         soundButton.action = toggleSoundButton
         musicButton.action = toggleMusicButton
+        creditsButton.action = showCredits
         
         // Designate positions
         closeButton.position = CGPoint(x: 60, y: -100)
         soundButton.position = CGPoint(x: 0, y: -160)
         musicButton.position = CGPoint(x: 60, y: -160)
+        creditsButton.position = CGPoint(x: -60, y: -160)
         
         // Add nodes to layer node
         layer.addChild(background)
         layer.addChild(closeButton)
         layer.addChild(soundButton)
         layer.addChild(musicButton)
+        layer.addChild(creditsButton)
         
         return layer
     }
@@ -73,6 +80,7 @@ class Settings {
         soundButton.run(SKAction.removeFromParent())
         musicButton.run(SKAction.removeFromParent())
         closeButton.run(SKAction.removeFromParent())
+        creditsButton.run(SKAction.removeFromParent())
         
         let fadeOut = SKAction.fadeAlpha(to: 0.0, duration: 0.3)
         let backgroundActions = SKAction.sequence([fadeOut, SKAction.removeFromParent()])
@@ -100,6 +108,23 @@ class Settings {
         } else {
             musicButton.changeTexture("musicButton")
         }
+    }
+    
+    func showCredits() {
+        let infoOverlay = ButtonNode(defaultButtonImage: "overlay")
+        infoOverlay.action = { infoOverlay.removeFromParent() }
+        infoOverlay.setScale(Constant.ScaleFactor)
+        
+        let infoSprite = SKSpriteNode(imageNamed: "creditsInfo")
+        infoSprite.position = CGPoint(x: 0, y: 50)
+        
+        infoOverlay.addChild(infoSprite)
+        infoOverlay.alpha = 0.0
+        
+        let fadeIn = SKAction.fadeAlpha(to: 1.0, duration: 0.2)
+        infoOverlay.run(fadeIn)
+        
+        layer.addChild(infoOverlay)
     }
     
     func presentMenuScene() {

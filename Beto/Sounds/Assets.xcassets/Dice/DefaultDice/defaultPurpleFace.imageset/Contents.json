@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "purpleCube.png",
+      "filename" : "defaultPurpleFace.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "purpleCube@2x.png",
+      "filename" : "defaultPurpleFace@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "purpleCube@3x.png",
+      "filename" : "defaultPurpleFace@3x.png",
       "scale" : "3x"
     }
   ],

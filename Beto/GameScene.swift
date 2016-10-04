@@ -23,7 +23,7 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(dice: DiceType) {
+    init(dice: DiceType, selectedColors: [Color]) {
         cameraNode = SCNNode()
         floorNode = SCNNode()
         diceNode = SCNNode()
@@ -40,7 +40,7 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
         floorNode.opacity = 0.0
         floorNode.position = SCNVector3(0, 0, 0)
 
-        let diceMaker = DiceMaker(type: dice)
+        let diceMaker = DiceMaker(type: dice, selectedColors: selectedColors)
         diceMaker.addDiceSetTo(diceNode)
         
         // Initialize boundary objects
@@ -89,6 +89,13 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
         plane.geometry = SCNBox(width: planeScalar * 2, height: planeScalar * 2, length: 0.05, chamferRadius: 0)
         plane.opacity = planeOpacity
         plane.physicsBody = SCNPhysicsBody.static()
+    }
+    
+    func playRollDiceSoundEffect() {
+        let audioSource = SCNAudioSource(named: "Roll.wav")!
+        let audioPlayer = SCNAudioPlayer(source: audioSource)
+        
+        diceNode.addAudioPlayer(audioPlayer)
     }
     
     func nearlyAtRest(_ node: SCNNode) -> Bool {

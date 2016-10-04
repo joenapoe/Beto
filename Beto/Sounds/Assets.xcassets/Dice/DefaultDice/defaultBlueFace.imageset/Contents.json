@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "blueCube.png",
+      "filename" : "defaultBlueFace.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "blueCube@2x.png",
+      "filename" : "defaultBlueFace@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "blueCube@3x.png",
+      "filename" : "defaultBlueFace@3x.png",
       "scale" : "3x"
     }
   ],

@@ -59,9 +59,9 @@ class AchievementsManager {
         let gamesPlayed = Achievement(name: AchievementName.GamesPlayed.rawValue,
                                       displayName: "Can't Put It Down",
                                       requirementValues: gamesPlayedValues,
-                                      requirements: ["Play \(gamesPlayedValues[0]) times",
-                                        "Play \(gamesPlayedValues[1]) times",
-                                        "Play \(gamesPlayedValues[2]) times"],
+                                      requirements: ["Play \(gamesPlayedValues[0].formatStringFromNumberShortenMillion()) games",
+                                        "Play \(gamesPlayedValues[1].formatStringFromNumberShortenMillion()) games",
+                                        "Play \(gamesPlayedValues[2].formatStringFromNumberShortenMillion()) games"],
                                       rewards: [Reward(starCoins: 3, rewardsDice: .Platinum),
                                         Reward(starCoins: 5, rewardsDice: .Diamond),
                                         Reward(starCoins: 10, rewardsDice: .Ruby)])
@@ -73,9 +73,9 @@ class AchievementsManager {
         let moneyInTheBank = Achievement(name: AchievementName.MoneyInTheBank.rawValue,
                                          displayName: "Money in the Bank",
                                          requirementValues: moneyValues,
-                                         requirements: ["Reach a highscore of \(moneyValues[0])",
-                                            "Reach a highscore of \(moneyValues[1])",
-                                            "Reach a highscore of \(moneyValues[2])"],
+                                         requirements: ["Reach a highscore of \(moneyValues[0].formatStringFromNumberShortenMillion())",
+                                            "Reach a highscore of \(moneyValues[1].formatStringFromNumberShortenMillion())",
+                                            "Reach a highscore of \(moneyValues[2].formatStringFromNumberShortenMillion())"],
                                          rewards: [Reward(starCoins: 3, rewardsDice: .Platinum),
                                             Reward(starCoins: 5, rewardsDice: .Diamond),
                                             Reward(starCoins: 10, rewardsDice: .Ruby)])
@@ -88,9 +88,9 @@ class AchievementsManager {
         let highestWager = Achievement(name: AchievementName.HighestWager.rawValue,
                                        displayName: "The Gambler",
                                        requirementValues: highestWagerValues,
-                                       requirements: ["Place a \(highestWagerValues[0]) bet on any color",
-                                        "Place a \(highestWagerValues[1]) bet on any color",
-                                        "Place a \(highestWagerValues[2]) bet on any color"],
+                                       requirements: ["Place a \(highestWagerValues[0].formatStringFromNumberShortenMillion()) bet on any color",
+                                        "Place a \(highestWagerValues[1].formatStringFromNumberShortenMillion()) bet on any color",
+                                        "Place a \(highestWagerValues[2].formatStringFromNumberShortenMillion()) bet on any color"],
                                        rewards: [Reward(starCoins: 3, rewardsDice: .Platinum),
                                         Reward(starCoins: 5, rewardsDice: .Diamond),
                                         Reward(starCoins: 10, rewardsDice: .Ruby)])
@@ -103,9 +103,9 @@ class AchievementsManager {
         let moneyGrabber = Achievement(name: AchievementName.MoneyGrabber.rawValue,
                                       displayName: "Money Grabber",
                                       requirementValues: moneyGrabberValues,
-                                      requirements: ["Win \(moneyGrabberValues[0]) times",
-                                        "Win \(moneyGrabberValues[1]) times",
-                                        "Win \(moneyGrabberValues[2]) times"],
+                                      requirements: ["Win \(moneyGrabberValues[0].formatStringFromNumberShortenMillion()) times",
+                                        "Win \(moneyGrabberValues[1].formatStringFromNumberShortenMillion()) times",
+                                        "Win \(moneyGrabberValues[2].formatStringFromNumberShortenMillion()) times"],
                                       rewards: [Reward(starCoins: 3, rewardsDice: .Platinum),
                                         Reward(starCoins: 5, rewardsDice: .Diamond),
                                         Reward(starCoins: 10, rewardsDice: .Ruby)])
@@ -117,9 +117,9 @@ class AchievementsManager {
         let unlucky = Achievement(name: AchievementName.Unlucky.rawValue,
                                        displayName: "Unlucky",
                                        requirementValues: unluckyValues,
-                                       requirements: ["Win \(unluckyValues[0]) times without a reward",
-                                        "Win \(unluckyValues[1]) times without a reward",
-                                        "Win \(unluckyValues[2]) times without a reward"],
+                                       requirements: ["Win \(unluckyValues[0].formatStringFromNumberShortenMillion()) times without a reward",
+                                        "Win \(unluckyValues[1].formatStringFromNumberShortenMillion()) times without a reward",
+                                        "Win \(unluckyValues[2].formatStringFromNumberShortenMillion()) times without a reward"],
                                        rewards: [Reward(starCoins: 3, rewardsDice: .Platinum),
                                         Reward(starCoins: 5, rewardsDice: .Diamond),
                                         Reward(starCoins: 10, rewardsDice: .Ruby)])
@@ -132,9 +132,9 @@ class AchievementsManager {
         let coinCollector = Achievement(name: AchievementName.CoinCollector.rawValue,
                                         displayName: "Coin Collector",
                                         requirementValues: coinValues,
-                                        requirements: ["Unlock a Coin",
-                                            "Unlock \(coinValues[1]) Coin",
-                                            "Unlock all Coins"],
+                                        requirements: ["Unlock a coin in the Coin Vault",
+                                            "Unlock \(coinValues[1]) coins in the Coin Vault",
+                                            "Unlock all coins in the Coin Vault"],
                                         rewards: [Reward(starCoins: 3, rewardsDice: .Platinum),
                                             Reward(starCoins: 5, rewardsDice: .Diamond),
                                             Reward(starCoins: 10, rewardsDice: .Ruby)])
@@ -390,19 +390,19 @@ class AchievementsManager {
         achievement.calculateProgress()
         
         if achievement.level > oldLevel {
-            GameData.unlockedLevelHandler!(achievement)
+            GameData.unlockedAchievementHandler!(achievement)
         }
     }
 
     fileprivate func colorWinRequirements(_ color: Color, values: [Int]) -> [String] {
-        return ["Place \(values[0]) winning bets on \(color.rawValue)", "Place \(values[1]) winning bets on \(color.rawValue)", "Place \(values[2]) winning bets on \(color.rawValue)"]
+        return ["Place \(values[0].formatStringFromNumberShortenMillion()) winning bets on \(color.rawValue)", "Place \(values[1].formatStringFromNumberShortenMillion()) winning bets on \(color.rawValue)", "Place \(values[2].formatStringFromNumberShortenMillion()) winning bets on \(color.rawValue)"]
     }
     
     fileprivate func powerUpRequirements(_ powerUp: String, values: [Int]) -> [String] {
-        return ["Use \(powerUp) \(values[0]) times", "Use \(powerUp) \(values[1]) times", "Use \(powerUp) \(values[2]) times"]
+        return ["Use \(powerUp) \(values[0].formatStringFromNumberShortenMillion()) times", "Use \(powerUp) \(values[1].formatStringFromNumberShortenMillion()) times", "Use \(powerUp) \(values[2].formatStringFromNumberShortenMillion()) times"]
     }
     
     fileprivate func rewardsDiceRequirements(_ dice: String, values: [Int]) -> [String] {
-        return ["Open \(values[0]) \(dice) rewards dice", "Open \(values[1]) \(dice) rewards dice", "Open \(values[2]) \(dice) rewards dice"]
+        return ["Open \(values[0].formatStringFromNumberShortenMillion()) \(dice) rewards dice", "Open \(values[1].formatStringFromNumberShortenMillion()) \(dice) rewards dice", "Open \(values[2].formatStringFromNumberShortenMillion()) \(dice) rewards dice"]
     }
 }

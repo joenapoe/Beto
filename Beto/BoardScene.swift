@@ -30,12 +30,12 @@ class BoardScene: SKScene {
 
     // Squares
     fileprivate let squareSize: CGFloat = 92.0
-    fileprivate(set) var squaresSelectedCount = 0
+    fileprivate(set) var selectedColors: [Color]
     fileprivate var squares: [Square]
     fileprivate var winningSquares: [Square]
     fileprivate var previousBets: [(color: Color, wager: Int)]
     
-    fileprivate var dropdownQueue: [DropdownNode]
+    fileprivate var unlockedAchievements: [DropdownNode]
     fileprivate var rewardTriggered = false
     fileprivate var rewardBoostActivated = false
     fileprivate var diceType: DiceType = .default
@@ -47,11 +47,15 @@ class BoardScene: SKScene {
     }
     
     override init(size: CGSize) {
+        let themes = ThemeManager()
+        let theme = themes.getTheme(GameData.currentThemeName)
+        
         /***** Initialize Variables *****/
+        selectedColors = []
         squares = []
         winningSquares = []
         previousBets = []
-        dropdownQueue = []
+        unlockedAchievements = []
         
         layer = SKNode()
         layer.setScale(Constant.ScaleFactor)
@@ -75,7 +79,8 @@ class BoardScene: SKScene {
         coinsLabel.fontName = Constant.FontNameCondensed
         coinsLabel.fontSize = 14
         coinsLabel.horizontalAlignmentMode = .center
-        coinsLabel.verticalAlignmentMode = .center
+        coinsLabel.verticalAlignmentMode = .top
+        coinsLabel.position = CGPoint(x: 0, y: 7)
         
         highscoreButton = ButtonNode(defaultButtonImage: "highscoreButton")
         highscoreButton.size = CGSize(width: 100, height: 25)
@@ -85,10 +90,11 @@ class BoardScene: SKScene {
         highscoreLabel.fontName = Constant.FontNameCondensed
         highscoreLabel.fontSize = 14
         highscoreLabel.horizontalAlignmentMode = .center
-        highscoreLabel.verticalAlignmentMode = .center
+        highscoreLabel.verticalAlignmentMode = .top
+        highscoreLabel.position = CGPoint(x: 0, y: 7)
         
         /***** Initialize Board *****/
-        board = SKSpriteNode(imageNamed: GameData.theme.board)
+        board = SKSpriteNode(imageNamed: theme.board)
         board.size = CGSize(width: 300, height: 280)
         board.position = CGPoint(x: 0, y: (-ScreenSize.Height / Constant.ScaleFactor + board.size.height) / 2 + 52) // AdMob Height: 50
         
@@ -121,11 +127,12 @@ class BoardScene: SKScene {
         coinVaultButton.size = CGSize(width: 38, height: 39)
         coinVaultButton.position = CGPoint(x: (board.size.width - coinVaultButton.size.width) / 2,
                                            y: board.position.y + (board.size.height + powerUpButton.size.height + Constant.Margin) / 2)
-        
-        diceVaultButton = ButtonNode(defaultButtonImage: "rewardsDiceButton")
+  
+        diceVaultButton = ButtonNode(defaultButtonImage: "bronzeReward")
         diceVaultButton.size = CGSize(width: 31, height: 36)
         diceVaultButton.position = CGPoint(x: (board.size.width - diceVaultButton.size.width) / 2,
                                            y: gameHUD.position.y - (gameHUD.size.height + diceVaultButton.size.height + Constant.Margin) / 2)
+        diceVaultButton.addWobbleAnimation()
         
         deactivatePowerUpSprite = SKSpriteNode(imageNamed: "deactivateButton")
         deactivatePowerUpSprite.size = CGSize(width: 18, height: 19)
@@ -135,7 +142,7 @@ class BoardScene: SKScene {
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
         GameData.unlockedCoinHandler = showUnlockedCoin
-        GameData.unlockedLevelHandler = addToDropdownQueue
+        GameData.unlockedAchievementHandler = showUnlockedAchievements
         
         // Set button actions
         menuButton.action = presentMenuScene
@@ -180,7 +187,7 @@ class BoardScene: SKScene {
         layer.addChild(diceVaultButton)
         
         // Initialize background
-        let background = SKSpriteNode(imageNamed: GameData.theme.background)
+        let background = SKSpriteNode(imageNamed: theme.background)
         background.size = self.frame.size
         
         if !Audio.musicMuted {
@@ -192,6 +199,32 @@ class BoardScene: SKScene {
         // Add background and main layer to the scene
         addChild(background)
         addChild(layer)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(toggleDiceVaultButton), name: NSNotification.Name(rawValue: "toggleDiceVaultButton"), object: nil)
+        
+        // Toggle visibility of the diceVaultButton
+        toggleDiceVaultButton()
+        
+        // Show Golden Ticket if player has 0 coins
+        showGoldenTicket()
+    }
+    
+    func toggleDiceVaultButton() {
+        var isHidden = true
+        
+        for key in RewardsDiceKey.allValues.reversed() {
+            let count = GameData.getRewardsDiceCount(key.rawValue)
+            
+            if count > 0 {
+                let texture = key.rawValue.lowercased() + "Reward"
+                diceVaultButton.changeTexture(texture)
+                
+                isHidden = false
+                break
+            }
+        }
+        
+        diceVaultButton.isHidden = isHidden
     }
     
     /***** GameHUD Functions *****/
@@ -247,12 +280,12 @@ class BoardScene: SKScene {
         let coinsAvailable = GameData.coins - getWagers()
         
         if coinsAvailable == 0 {
-            run(Audio.lostSound)
+            run(Audio.errorSound)
             return
         }
         
         // Limit selected squares to 3 colors
-        if !square.selected && squaresSelectedCount == 3 {
+        if !square.selected && selectedColors.count == 3 {
             let colorLimitNode = SKLabelNode(text: "SELECT UP TO 3 COLORS")
             colorLimitNode.fontName = Constant.FontName
             colorLimitNode.fontSize = 16
@@ -265,7 +298,7 @@ class BoardScene: SKScene {
             
             colorLimitNode.run(actions)
             
-            run(Audio.lostSound)
+            run(Audio.errorSound)
             
             return
         }
@@ -289,7 +322,7 @@ class BoardScene: SKScene {
             square.label.isHidden = false
             square.selected = true
             
-            squaresSelectedCount += 1
+            selectedColors.append(square.color)
         }
         
         // Hard toggle to clearButton
@@ -299,7 +332,7 @@ class BoardScene: SKScene {
             clearReplayButton.action = clearButtonPressed
         }
     }
-    
+        
     fileprivate func playButtonPressed() {
         if getWagers() > 0 {
             // Reset previousBets
@@ -326,7 +359,7 @@ class BoardScene: SKScene {
                 squares[index].updateLabel()
                 squares[index].selected = true
                 
-                squaresSelectedCount += 1
+                selectedColors.append(squares[index].color)
             }
         }
         
@@ -349,8 +382,13 @@ class BoardScene: SKScene {
         }
         
         resetSquaresSelectedCount()
+
+        if clearReplayButton.name == "replayButton" {
+            run(Audio.placeBetSound)
+        } else {
+            run(Audio.clearBetSound)
+        }
         
-        run(Audio.clearBetSound)
         updateCoinsLabel(GameData.coins)
         
         toggleReplayButton()
@@ -420,7 +458,7 @@ class BoardScene: SKScene {
     }
     
     fileprivate func openRewardsDice(_ dice: RewardsDice) {
-        let openRewards = OpenRewardsNode(diceKey: dice.key)
+        let openRewards = OpenRewardsDice(diceKey: dice.key)
         addChild(openRewards.createLayer())        
     }
     
@@ -528,13 +566,13 @@ class BoardScene: SKScene {
     }
     
     func resetSquaresSelectedCount() {
-       squaresSelectedCount = 0
+        selectedColors = []
     }
     
     /***** Dropdown Functions *****/
-    fileprivate func addToDropdownQueue(_ achievement: Achievement) {
-        let unlocked = UnlockedLevel(achievement: achievement)
-        dropdownQueue.append(unlocked)
+    fileprivate func showUnlockedAchievements(_ achievement: Achievement) {
+        let unlocked = AchievementUnlocked(achievement: achievement)
+        unlockedAchievements.append(unlocked)
     }
     
     fileprivate func showUnlockedCoin() {
@@ -571,7 +609,7 @@ class BoardScene: SKScene {
         
         // Don't show label and calculate progress on last coin
         if GameData.coinsUnlocked != 7 {
-            let nextCoinLabel = SKLabelNode(text: "Next Coin unlocks at \(Constant.CoinUnlockedAt[GameData.coinsUnlocked]) coins")
+            let nextCoinLabel = SKLabelNode(text: "Next Coin unlocks at \(Constant.CoinUnlockedAt[GameData.coinsUnlocked].formatStringFromNumberShortenMillion()) coins")
             nextCoinLabel.fontName = Constant.FontName
             nextCoinLabel.fontColor = UIColor.darkGray
             nextCoinLabel.fontSize = 10
@@ -623,7 +661,7 @@ class BoardScene: SKScene {
         var rewardChance = GameData.rewardChance
         
         if activePowerUp == PowerUpKey.rewardBoost.rawValue {
-            rewardChance += rewardChance
+            rewardChance *= 2
             rewardBoostActivated = true
         } else {
             rewardBoostActivated = false
@@ -639,7 +677,61 @@ class BoardScene: SKScene {
         }
     }
     
+    func showGoldenTicket() {
+        if GameData.coins == 0 {
+            let container = SKSpriteNode(imageNamed: "goldenTicketBackground")
+            container.size = CGSize(width: 304, height: 267)
+            container.position = CGPoint(x: 0, y: ScreenSize.Height)
+            
+            let rand = Int(arc4random_uniform(5))
+            let flavorText = ["WHO DOESN'T LOVE FREE STUFF",
+                              "HEY, LOOK WHAT I FOUND",
+                              "BETTER LUCK THIS TIME",
+                              "OUCH! CONSOLATION PRIZE?",
+                              "YOU'LL PAY ME BACK, RIGHT?"]
+            
+            let titleLabel = SKLabelNode(text: flavorText[rand])
+            titleLabel.fontName = Constant.FontNameExtraBold
+            titleLabel.fontColor = UIColor.white
+            titleLabel.fontSize = 14
+            titleLabel.position = CGPoint(x: 0, y: 65)
+            
+            let titleShadow = titleLabel.createLabelShadow()
+            
+            container.addChild(titleShadow)
+            container.addChild(titleLabel)
+            
+            let ticket = SKSpriteNode(imageNamed: "goldenTicket")
+            container.addChild(ticket)
+            
+            // Claim button
+            let claimButton = ButtonNode(defaultButtonImage: "claimButton", activeButtonImage: "claimButton_active")
+            claimButton.size = CGSize(width: 110, height: 40)
+            claimButton.position = CGPoint(x: 0, y: -100)
+            
+            // Add nodes
+            container.addChild(claimButton)
+            
+            let goldenTicket = DropdownNode(container: container)
+            
+            claimButton.action = {
+                goldenTicket.close()
+                
+                // Update labels
+                self.updateCoinsLabel(GameData.coins)
+                self.updateHighscoreLabel(GameData.highscore)
+            }
+            
+            addChild(goldenTicket.createLayer())
+            
+            // Add coins in background
+            GameData.addCoins(100)
+            GameData.save()
+        }
+    }
+    
     func showUnlockedNodes() {
+        // Check for Random Reward
         if rewardTriggered {
             let rewardsDice: RewardsDice
             
@@ -676,141 +768,65 @@ class BoardScene: SKScene {
                     rewardsDice = RewardsDice(key: .Ruby, count: -99)
                 }
             }
-
+            
             GameData.addRewardsDiceCount(rewardsDice.key.rawValue, num: 1)
             GameData.save()
             
-            let rewardTriggeredNode = RewardTriggered(rewardsDice: rewardsDice)
+            let rewardUnlocked = RewardUnlocked(rewardsDice: rewardsDice, rewardType: .Chance)
             
             rewardsDice.openRewardsDiceHandler = openRewardsDice
             rewardsDice.addWobbleAnimation()
             rewardsDice.action = {
                 rewardsDice.buttonPressed()
-                rewardTriggeredNode.close()
+                rewardUnlocked.close()
             }
             
-            addChild(rewardTriggeredNode.createLayer())
+            addChild(rewardUnlocked.createLayer())
             
             // reset rewardTriggered, rewardBoostActivated, and rewardChance
             rewardTriggered = false
             rewardBoostActivated = false
             GameData.resetRewardChance()
-
         }
         
-        // DELETE: Temp Gameplay Rewards - Revised code later
+        // Check for Gameplay Rewards
+        var rewardsDice: RewardsDice!
         
-        if GameData.gamesPlayed % 10000 == 0 {
-            let rewardsDice = RewardsDice(key: .Diamond, count: -99)
-            
+        if GameData.gamesPlayed % 100000 == 0 {
+            rewardsDice = RewardsDice(key: .Ruby, count: -99)
+        } else if GameData.gamesPlayed % 10000 == 0 {
+            rewardsDice = RewardsDice(key: .Diamond, count: -99)
+        } else if GameData.gamesPlayed % 1000 == 0 {
+            rewardsDice = RewardsDice(key: .Platinum, count: -99)
+        } else if GameData.gamesPlayed % 100 == 0 {
+            rewardsDice = RewardsDice(key: .Gold, count: -99)
+        }
+        
+        if rewardsDice != nil {
             GameData.addRewardsDiceCount(rewardsDice.key.rawValue, num: 1)
             GameData.save()
             
-            let rewardTriggeredNode = RewardTriggered(rewardsDice: rewardsDice)
+            let rewardUnlocked = RewardUnlocked(rewardsDice: rewardsDice, rewardType: .Gameplay)
             
             rewardsDice.openRewardsDiceHandler = openRewardsDice
             rewardsDice.addWobbleAnimation()
             rewardsDice.action = {
                 rewardsDice.buttonPressed()
-                rewardTriggeredNode.close()
+                rewardUnlocked.close()
             }
             
-            addChild(rewardTriggeredNode.createLayer())
+            addChild(rewardUnlocked.createLayer())
         }
         
-        // DELETE: Temp Gameplay Rewards - Revised code later
-        if GameData.gamesPlayed % 1000 == 0 {
-            let rewardsDice = RewardsDice(key: .Platinum, count: -99)
-            
-            GameData.addRewardsDiceCount(rewardsDice.key.rawValue, num: 1)
-            GameData.save()
-            
-            let rewardTriggeredNode = RewardTriggered(rewardsDice: rewardsDice)
-            
-            rewardsDice.openRewardsDiceHandler = openRewardsDice
-            rewardsDice.addWobbleAnimation()
-            rewardsDice.action = {
-                rewardsDice.buttonPressed()
-                rewardTriggeredNode.close()
-            }
-            
-            addChild(rewardTriggeredNode.createLayer())
-        }
-        
-        // DELETE: Temp Gameplay Rewards - Revised code later
-        if GameData.gamesPlayed % 100 == 0 {
-            let rewardsDice = RewardsDice(key: .Gold, count: -99)
-            
-            GameData.addRewardsDiceCount(rewardsDice.key.rawValue, num: 1)
-            GameData.save()
-            
-            let rewardTriggeredNode = RewardTriggered(rewardsDice: rewardsDice)
-            
-            rewardsDice.openRewardsDiceHandler = openRewardsDice
-            rewardsDice.addWobbleAnimation()
-            rewardsDice.action = {
-                rewardsDice.buttonPressed()
-                rewardTriggeredNode.close()
-            }
-            
-            addChild(rewardTriggeredNode.createLayer())
-        }
-    
-        if GameData.coins == 0 {
-            let container = SKSpriteNode(imageNamed: "goldenTicketBackground")
-            container.size = CGSize(width: 304, height: 267)
-            container.position = CGPoint(x: 0, y: ScreenSize.Height)
-            
-            
-            let rand = Int(arc4random_uniform(5))
-            let flavorText = ["WHO DOESN'T LOVE FREE STUFF",
-                              "HEY, LOOK WHAT I FOUND",
-                              "AWWW, STOP CRYING. HERE TAKE THIS",
-                              "OUCH! CONSOLATION PRIZE?",
-                              "YOU INHERIT 100 BETO COINS!"]
-            
-            let titleLabel = SKLabelNode(text: flavorText[rand])
-            titleLabel.fontName = Constant.FontNameExtraBold
-            titleLabel.fontColor = UIColor.white
-            titleLabel.fontSize = 14
-            titleLabel.position = CGPoint(x: 0, y: 65)
-            
-            let titleShadow = titleLabel.createLabelShadow()
-            
-            container.addChild(titleShadow)
-            container.addChild(titleLabel)
-            
-            let ticket = SKSpriteNode(imageNamed: "goldenTicket")
-            container.addChild(ticket)
-            
-            // Claim button
-            let claimButton = ButtonNode(defaultButtonImage: "claimButton", activeButtonImage: "claimButton_active")
-            claimButton.size = CGSize(width: 110, height: 40)
-            claimButton.position = CGPoint(x: 0, y: -100)
-            
-            // Add nodes
-            container.addChild(claimButton)
-            
-            let goldenTicket = DropdownNode(container: container)
-            
-            claimButton.action = {
-                goldenTicket.close()
-                GameData.addCoins(100)
-                GameData.save()
-                
-                // Update labels
-                self.updateCoinsLabel(GameData.coins)
-                self.updateHighscoreLabel(GameData.highscore)
-            }
-            
-            addChild(goldenTicket.createLayer())
-        }
-        
-        for node in dropdownQueue.reversed() {
+        // Show unlocked Achievements
+        for node in unlockedAchievements.reversed() {
             addChild(node.createLayer())
         }
         
-        dropdownQueue = []
+        unlockedAchievements = []
+        
+        // Show Golden Ticket if player ran out of coins
+        showGoldenTicket()
     }
     
     func presentGameScene() {
