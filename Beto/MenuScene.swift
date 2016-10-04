@@ -48,6 +48,20 @@ class MenuScene: SKScene {
         settingsButton.position = CGPoint(x: 60, y: -100)
         settingsButton.action = displaySettings
         
+        // Remove Ads Button
+        let removeAdsButton = ButtonNode(defaultButtonImage: "removeAdsButton")
+        removeAdsButton.size = CGSize(width: 32, height: 33)
+        removeAdsButton.position = CGPoint(x: -140 / Constant.ScaleFactor + Constant.Margin, y: (-ScreenSize.Height / Constant.ScaleFactor + removeAdsButton.size.height) / 2 + 50 / Constant.ScaleFactor)
+                
+        // Check if remove ads is already purchased
+        if Products.store.isProductPurchased(Products.RemoveAds) {
+            removeAdsButton.isHidden = true
+        } else {
+            removeAdsButton.isHidden = false
+            removeAdsButton.action = removeAds
+            layer.addChild(removeAdsButton)
+        }
+        
         // Add nodes
         layer.addChild(startGameButton)
         layer.addChild(themesButton)
@@ -56,6 +70,8 @@ class MenuScene: SKScene {
         
         addChild(background)
         addChild(layer)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(MenuScene.reloadScene), name: NSNotification.Name(rawValue: IAPHelper.IAPHelperPurchaseNotification), object: nil)
     }
     
     func presentBoardScene() {
@@ -97,5 +113,24 @@ class MenuScene: SKScene {
         
         addChild(layer)
     }
+    
+    func removeAds() {
+        Products.store.requestProducts { (success, products) in
+            if success {
+                for product in products! {
+                    Products.store.buyProduct(product)
+                }
+            }
+        }
+    }
+    
+    func reloadScene() {
+        let transition = SKTransition.flipVertical(withDuration: 0.0)
+        let menuScene = MenuScene(size: self.size)
+        menuScene.scaleMode = .aspectFill
+        
+        view!.presentScene(menuScene, transition: transition)
+    }
+    
 }
 
