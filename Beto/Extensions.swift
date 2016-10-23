@@ -39,6 +39,35 @@ extension Int {
             return formatStringFromNumber()
         }
     }
+
+    func formatStringFromNumberShorten() -> String {
+        
+        
+        if self >= 1000000 {
+            let formatter = NumberFormatter()
+            formatter.minimumFractionDigits = 0
+            formatter.maximumFractionDigits = 2
+            
+            let newNumber: Double = floor(Double(self) / 10000) / 100.0
+            let formattedNumber = formatter.string(from: NSNumber(value: newNumber))!
+            
+            return "\(formattedNumber)M"
+
+        } else if self >= 1000{
+            let formatter = NumberFormatter()
+            formatter.minimumFractionDigits = 0
+            formatter.maximumFractionDigits = 2
+            
+            let newNumber: Double = floor(Double(self) / 10) / 100.0
+            let formattedNumber = formatter.string(from: NSNumber(value: newNumber))!
+
+            return "\(formattedNumber)K"
+            
+        } else {
+            return formatStringFromNumber()
+        }
+    }
+
     
     func formatStringFromNumber() -> String {
         let formatter = NumberFormatter()

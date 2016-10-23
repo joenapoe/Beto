@@ -142,11 +142,14 @@ class GameViewController: UIViewController {
              
                 backButton.isEnabled = false
             }
-        } else if touchCount == 2 {
+        }else if touchCount == 2.0 {
             view.isUserInteractionEnabled = false
-
-            gameScene.playRollDiceSoundEffect()
             gameScene.shouldCheckMovement = true
+        }
+        
+        if touchCount == 1.0 {
+            gameScene.playRollDiceSoundEffect()
+            print("Playing Roll.wav")
         }
     }
     
@@ -175,7 +178,7 @@ class GameViewController: UIViewController {
             }
             
             if boardScene.didPayout(square) {
-                let winMsg = SCNText(string: "+\(boardScene.calculateWinnings(square))", extrusionDepth: 0.02)
+                let winMsg = SCNText(string: "+\(boardScene.calculateWinnings(square).formatStringFromNumberShorten())", extrusionDepth: 0.02)
                 winMsg.chamferRadius = 0.001
                 winMsg.font = UIFont(name: "Futura-CondensedExtraBold", size: (0.2/1.29375)*Constant.ScaleFactor)
                 
@@ -189,12 +192,12 @@ class GameViewController: UIViewController {
                 winMsg.alignmentMode = kCAAlignmentCenter
                 
                 let winMsgNode = SCNNode(geometry: winMsg)
-                winMsgNode.position = SCNVector3Make(node.presentation.position.x-0.15 , node.presentation.position.y+0.25 , node.presentation.position.z+0.1 )
+                winMsgNode.position = SCNVector3Make(node.presentation.position.x-0.15 , node.presentation.position.y+0.21 , node.presentation.position.z+1.0 )
                 winMsgNode.eulerAngles = SCNVector3Make(Float(-M_PI/2), 0,0)
                 
-                winMsgNode.physicsBody = SCNPhysicsBody.dynamic()
-                winMsgNode.physicsBody?.isAffectedByGravity = false
-                winMsgNode.physicsBody?.applyForce(SCNVector3(0,0.03,0), asImpulse: true)
+//                winMsgNode.physicsBody = SCNPhysicsBody.static()
+//                winMsgNode.physicsBody?.isAffectedByGravity = false
+//                winMsgNode.physicsBody?.applyForce(SCNVector3(0,0.03,0), asImpulse: true)
                 
                 gameScene.rootNode.addChildNode(winMsgNode)
                 
@@ -240,6 +243,32 @@ class GameViewController: UIViewController {
             rerollEnabled = false
             rerolling = true
 
+            //Animate Reroll
+            let rerollMsg = SCNText(string: "REROLL", extrusionDepth: 0.02)
+            rerollMsg.chamferRadius = 0.001
+            rerollMsg.font = UIFont(name: "Futura-CondensedExtraBold", size: (0.2/1.29375)*Constant.ScaleFactor)
+            
+            let whiteSide = SCNMaterial()
+            whiteSide.diffuse.contents = UIColor.white
+            let blackSide = SCNMaterial()
+            blackSide.diffuse.contents = UIColor.black
+            
+            rerollMsg.materials = [whiteSide,blackSide,blackSide,blackSide,blackSide]
+            rerollMsg.flatness = 0.000000000001
+            rerollMsg.alignmentMode = kCAAlignmentCenter
+            
+            let rerollMsgNode = SCNNode(geometry: rerollMsg)
+            rerollMsgNode.position = SCNVector3Make(-0.3,0.6,1)
+            
+            rerollMsgNode.eulerAngles = SCNVector3Make(Float(-M_PI/2), 0,0)
+            
+            rerollMsgNode.physicsBody = SCNPhysicsBody.dynamic()
+            rerollMsgNode.physicsBody?.isAffectedByGravity = false
+            rerollMsgNode.physicsBody?.applyForce(SCNVector3(0,0.03,0), asImpulse: true)
+            
+            self.gameScene.rootNode.addChildNode(rerollMsgNode)
+
+            
             delay(2.0) {
                 self.touchCount = 0.0
                 self.gameScene = GameScene(dice: .default, selectedColors: self.boardScene.selectedColors)
