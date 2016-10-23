@@ -16,7 +16,7 @@ class ThemesScene: SKScene {
     
     fileprivate var currentPage = 0
     fileprivate var perPageCount = 12
-    fileprivate var themeManager = ThemeManager()
+    fileprivate let themeManager = ThemeManager()
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder) is not used in this app")
@@ -47,7 +47,10 @@ class ThemesScene: SKScene {
             perPageCount = 9
         }
         
-        background = SKSpriteNode(imageNamed: GameData.theme.background)
+        let themes = ThemeManager()
+        let theme = themes.getTheme(GameData.currentThemeName)
+        
+        background = SKSpriteNode(imageNamed: theme.background)
         background.size = self.frame.size
         
         container = SKSpriteNode(imageNamed: "themesContainer")
@@ -85,13 +88,13 @@ class ThemesScene: SKScene {
         let starCoinsNode = ButtonNode(defaultButtonImage: "starCoinsButton")
         starCoinsNode.size = CGSize(width: 80, height: 25)
         starCoinsNode.position = CGPoint(x: (header.size.width - starCoinsNode.size.width) / 2 - Constant.Margin, y: 0)
-        
-        starCoinsLabel = SKLabelNode(text: "\(GameData.starCoins)")
+
+        starCoinsLabel = SKLabelNode(text: "\(GameData.starCoins.formatStringFromNumberShortenMillion())")
         starCoinsLabel.fontName = Constant.FontNameCondensed
         starCoinsLabel.fontSize = 14
         starCoinsLabel.horizontalAlignmentMode = .center
-        starCoinsLabel.verticalAlignmentMode = .center
-        starCoinsLabel.position = CGPoint(x: 5, y: 0)
+        starCoinsLabel.verticalAlignmentMode = .top
+        starCoinsLabel.position = CGPoint(x: 5, y: 7)
         
         // Add labels to star node
         starCoinsNode.addChild(starCoinsLabel)
@@ -118,7 +121,7 @@ class ThemesScene: SKScene {
         infoOverlay.action = { infoOverlay.removeFromParent() }
         infoOverlay.setScale(Constant.ScaleFactor)
         
-        let infoSprite = SKSpriteNode(imageNamed: "starCoinsInfo")
+        let infoSprite = SKSpriteNode(imageNamed: "themesInfo")
         
         infoOverlay.addChild(infoSprite)
         
@@ -190,16 +193,13 @@ class ThemesScene: SKScene {
                     let lockSprite = ButtonNode(defaultButtonImage: "themeLocked")
                     lockSprite.action = {
                         let container = SKSpriteNode(imageNamed: "buyThemeBackground")
-                        container.size = CGSize(width: 304, height: 467)
-                            
-                        var containerPosition = CGPoint(x: 0, y: ScreenSize.Height)
+                        container.position = CGPoint(x: 0, y: ScreenSize.Height)
                         
+                        // DELETE: Test
                         if UIScreen.main.bounds.height == 480 {
                             container.setScale(0.81)
-                            containerPosition = CGPoint(x: 0, y: ScreenSize.Height + 40)
+                            container.position = CGPoint(x: 0, y: ScreenSize.Height + 40)
                         }
-                        
-                        container.position = containerPosition
                         
                         let closeButton = ButtonNode(defaultButtonImage: "closeButton")
                         closeButton.size = CGSize(width: 44, height: 45)
@@ -210,41 +210,62 @@ class ThemesScene: SKScene {
                         preview.position = CGPoint(x: 0, y: -4)
                         
                         let overlay = SKSpriteNode(imageNamed: "buyThemeOverlay")
-                        overlay.position = CGPoint(x: 1, y: -3)
+                        overlay.position = CGPoint(x: 0, y: -3)
                         
-                        let buyThemeButton = ButtonNode(defaultButtonImage: "buyThemeButton")
-                        buyThemeButton.size = CGSize(width: 100, height: 30)
-                        buyThemeButton.position = CGPoint(x: 0, y: -200)
+                        let priceNode = SKSpriteNode(imageNamed: "priceStarCoin")
+                        priceNode.position = CGPoint(x: -10, y: -120)
                         
-                        let priceLabel = SKLabelNode(text: "\(theme.price)")
+                        let priceLabel = SKLabelNode(text: "\(theme.tier.rawValue)")
                         priceLabel.fontName = Constant.FontNameCondensed
-                        priceLabel.fontSize = 18
-                        priceLabel.horizontalAlignmentMode = .center
+                        priceLabel.fontColor = UIColor.white
+                        priceLabel.fontSize = 14
+                        priceLabel.horizontalAlignmentMode = .left
                         priceLabel.verticalAlignmentMode = .center
-                        priceLabel.position = CGPoint(x: 10, y: 0)
+                        priceLabel.position = CGPoint(x: 30, y: 0)
                         
-                        buyThemeButton.addChild(priceLabel)
+                        priceNode.addChild(priceLabel)
+                        overlay.addChild(priceNode)
+                        
+                        if theme.tier == .ultimate {
+                            let includesLabel = SKLabelNode(text: "Includes a custom dice")
+                            includesLabel.fontName = Constant.FontName
+                            includesLabel.fontColor = UIColor.white
+                            includesLabel.fontSize = 10
+                            includesLabel.horizontalAlignmentMode = .center
+                            includesLabel.verticalAlignmentMode = .center
+                            includesLabel.position = CGPoint(x: 0, y: -135)
+
+                            overlay.addChild(includesLabel)
+                        }
+                        
+                        let buyButton = ButtonNode(defaultButtonImage: "buyButton")
+                        buyButton.position = CGPoint(x: 0, y: -200)
                         
                         container.addChild(closeButton)
                         container.addChild(preview)
                         container.addChild(overlay)
-                        container.addChild(buyThemeButton)
+                        container.addChild(buyButton)
                         
                         let node = DropdownNode(container: container)
-                        
                         closeButton.action = node.close
                         
-                        if GameData.starCoins >= theme.price {
-                            overlay.isHidden = true
+                        if GameData.starCoins >= theme.tier.rawValue {
+                            buyButton.isHidden = false
                             
-                            buyThemeButton.action = {
+                            buyButton.action = {
                                 theme.purchase()
                                     
                                 self.starCoinsLabel.text = "\(GameData.starCoins)"
                                 lockSprite.removeFromParent()
                                 node.close()
                             }
+                        } else {
+                            buyButton.isHidden = true
+                        
+                            let needStarCoins = SKSpriteNode(imageNamed: "needStarCoinsInfo")
+                            overlay.addChild(needStarCoins)
                         }
+                        
                         self.addChild(node.createLayer())
                     }
                     sprite.addChild(lockSprite)

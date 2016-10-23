@@ -112,7 +112,7 @@ class BuyDiceNode: SKNode {
         
         let confirmPurchaseNode = DropdownNode(container: container)
         
-        let purchaseText = "Purchase \(diceKey) Rewards Dice"
+        let purchaseText = "\(diceKey) Rewards Dice"
         
         let purchaseLabel = SKLabelNode(text: purchaseText.uppercased())
         purchaseLabel.fontName = Constant.FontNameExtraBold

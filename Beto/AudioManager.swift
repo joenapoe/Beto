@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import SceneKit
 
 class AudioManager {    
     var backgroundMusic: SKAudioNode
@@ -15,7 +16,7 @@ class AudioManager {
     
     var placeBetSound: SKAction {
         if !soundMuted {
-            return SKAction.playSoundFileNamed("Chomp.wav", waitForCompletion: false)
+            return SKAction.playSoundFileNamed("Click.wav", waitForCompletion: false)
         } else {
             return SKAction()
         }
@@ -23,7 +24,7 @@ class AudioManager {
     
     var clearBetSound: SKAction {
         if !soundMuted {
-            return SKAction.playSoundFileNamed("Scrape.wav", waitForCompletion: false)
+            return SKAction.playSoundFileNamed("Whoosh.wav", waitForCompletion: false)
         } else {
             return SKAction()
         }
@@ -37,19 +38,19 @@ class AudioManager {
         }
     }
     
-    var lostSound: SKAction {
+    var errorSound: SKAction {
         if !soundMuted {
             return SKAction.playSoundFileNamed("Error.wav", waitForCompletion: false)
         } else {
             return SKAction()
         }
     }
-    
+        
     init() {
         soundMuted = GameData.soundMuted
         musicMuted = GameData.musicMuted
         
-        backgroundMusic = SKAudioNode(fileNamed: "Mining by Moonlight.mp3")
+        backgroundMusic = SKAudioNode(fileNamed: "George Street Shuffle.mp3")
     }
     
     func toggleSound() {

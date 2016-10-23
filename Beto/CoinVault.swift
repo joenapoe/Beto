@@ -33,16 +33,10 @@ class CoinVault: DropdownNode {
         super.init(container: vault)
         
         // Initialize info layer
+        let infoSprite = SKSpriteNode(imageNamed: "coinVaultInfo")
+
         let infoOverlay = ButtonNode(defaultButtonImage: "overlay")
         infoOverlay.action = { infoOverlay.removeFromParent() }
-
-        let coin = SKSpriteNode(imageNamed: "coin5")
-        coin.position = pointForPosition(0)
-        
-        let infoSprite = SKSpriteNode(imageNamed: "coinVaultInfo")
-        infoSprite.position = CGPoint(x: 0, y: -60)
-                
-        infoOverlay.addChild(coin)
         infoOverlay.addChild(infoSprite)
         
         // Add actions

@@ -20,8 +20,11 @@ class MenuScene: SKScene {
         layer.setScale(Constant.ScaleFactor)
         
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
-                
-        let background = SKSpriteNode(imageNamed: GameData.theme.background)
+        
+        let themes = ThemeManager()
+        let theme = themes.getTheme(GameData.currentThemeName)
+        
+        let background = SKSpriteNode(imageNamed: theme.background)
         background.size = self.frame.size
         
         // Start Game Button

@@ -40,13 +40,10 @@ class GameDataManager {
     fileprivate(set) var achievementTracker: [String:Int]
     fileprivate(set) var powerUps: [String:Int]
     fileprivate(set) var rewardsDice: [String:Int]
-    
-    // Non-plist variables
-    fileprivate(set) var theme: Theme
     fileprivate(set) var rewardChance: Int
     
     var unlockedCoinHandler: (() -> ())?
-    var unlockedLevelHandler: ((Achievement) -> ())?
+    var unlockedAchievementHandler: ((Achievement) -> ())?
         
     init() {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
@@ -85,7 +82,6 @@ class GameDataManager {
         powerUps = dict.object(forKey: powerUpsKey) as! [String:Int]
         rewardsDice = dict.object(forKey: rewardsDiceKey) as! [String:Int]
 
-        theme = Theme(themeName: currentThemeName, unlocked: true)
         rewardChance = 0
     }
     
@@ -117,7 +113,6 @@ class GameDataManager {
     
     func changeTheme(_ theme: Theme) {
         currentThemeName = theme.name
-        self.theme = theme
     }
     
     func addPurchasedTheme(_ themeName: String) {
@@ -255,12 +250,16 @@ class GameDataManager {
     func addRewardsDiceCount(_ diceKey: String, num: Int) {
         if let value = rewardsDice[diceKey] {
             rewardsDice[diceKey] = value + num
+        
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "toggleDiceVaultButton"), object: self)
         }
     }
     
     func subtractRewardsDiceCount(_ diceKey: String, num: Int) {
         if let value = rewardsDice[diceKey] {
             rewardsDice[diceKey] = value - num
+            
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "toggleDiceVaultButton"), object: self)
         }
     }
 }

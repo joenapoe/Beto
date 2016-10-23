@@ -12,84 +12,41 @@ class ThemeManager {
     fileprivate(set) var themes = [Theme]()
 
     init() {
-        let defaultTheme = Theme(themeName: "Default")
+        let defaultTheme = Theme(themeName: "Default", tier: .free)
         themes.append(defaultTheme)
         
-//        let blueTheme = Theme(themeName: "Aqua")
-//        blueTheme.setPrice(.basic)
-//        themes.append(blueTheme)
-//        
-//        let redTheme = Theme(themeName: "Red")
-//        redTheme.setPrice(.basic)
-//        themes.append(redTheme)
-//        
-//        let greenTheme = Theme(themeName: "Green")
-//        greenTheme.setPrice(.basic)
-//        themes.append(greenTheme)
-//        
-//        let purpleTheme = Theme(themeName: "Purple")
-//        purpleTheme.setPrice(.basic)
-//        themes.append(purpleTheme)
-//        
-//        let yellowTheme = Theme(themeName: "Yellow")
-//        yellowTheme.setPrice(.premium)
-//        themes.append(yellowTheme)
-//        
-//        let cyanTheme = Theme(themeName: "Cyan")
-//        cyanTheme.setPrice(.premium)
-//        themes.append(cyanTheme)
-//        
-//        let blackTheme = Theme(themeName: "Black")
-//        blackTheme.setPrice(.premium)
-//        themes.append(blackTheme)
-//        
-//        let azulTheme = Theme(themeName: "Azul")
-//        azulTheme.setPrice(ThemePrice.legendary)
-//        themes.append(azulTheme)
-//        
-//        let midnightTheme = Theme(themeName: "Midnight")
-//        midnightTheme.setPrice(ThemePrice.legendary)
-//        themes.append(midnightTheme)
-        
-        let aqua = Theme(themeName: "Aqua")
-        aqua.setPrice(.basic)
-        themes.append(aqua)
-        
-        let azure = Theme(themeName: "Azure")
-        azure.setPrice(.basic)
-        themes.append(azure)
-        
-        let beach = Theme(themeName: "Beach")
-        beach.setPrice(.basic)
-        themes.append(beach)
-        
-        let candy = Theme(themeName: "Candy")
-        candy.setPrice(.basic)
-        themes.append(candy)
-        
-        let mango = Theme(themeName: "Mango")
-        mango.setPrice(.basic)
+        let mango = Theme(themeName: "Mango", tier: .basic)
         themes.append(mango)
         
-        let peach = Theme(themeName: "Peach")
-        peach.setPrice(.basic)
+        let marine = Theme(themeName: "Marine", tier: .basic)
+        themes.append(marine)
+
+        let onyx = Theme(themeName: "Onyx", tier: .basic)
+        themes.append(onyx)
+        
+        let peach = Theme(themeName: "Peach", tier: .basic)
         themes.append(peach)
         
-        let sky = Theme(themeName: "Sky")
-        sky.setPrice(.basic)
-        themes.append(sky)
-        
-        let sunset = Theme(themeName: "Sunset")
-        sunset.setPrice(.basic)
+        let sunset = Theme(themeName: "Sunset", tier: .basic)
         themes.append(sunset)
         
-        let constellations = Theme(themeName: "Constellations")
-        constellations.setPrice(.premium)
+        let beach = Theme(themeName: "Beach", tier: .premium)
+        themes.append(beach)
+        
+        let constellations = Theme(themeName: "Constellations", tier: .premium)
         themes.append(constellations)
         
-        let galaxy = Theme(themeName: "Galaxy")
-        galaxy.setPrice(.premium)
-        themes.append(galaxy)        
+        let strawberry = Theme(themeName: "Strawberry", tier: .premium)
+        themes.append(strawberry)
+        
+        let candy = Theme(themeName: "Candy", tier: .ultimate)
+        themes.append(candy)
+        
+        let clouds = Theme(themeName: "Clouds", tier: .ultimate)
+        themes.append(clouds)
+        
+        let galaxy = Theme(themeName: "Galaxy", tier: .ultimate)
+        themes.append(galaxy)
     }
 
     func getTheme(_ themeName: String) -> Theme {

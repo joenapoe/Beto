@@ -43,7 +43,7 @@ extension Int {
     func formatStringFromNumber() -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        formatter.groupingSeparator = "\u{2008}"
+        formatter.groupingSeparator = ","
         
         let formattedNumber = formatter.string(from: NSNumber(value: self))!
         
